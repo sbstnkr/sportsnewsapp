@@ -124,55 +124,47 @@ bottom:   20px;"
                 </v-carousel-item>
             </v-carousel>
         </div>
-<!--        <div class="container" v-if="clubs">-->
-<!--            <div class="col" v-for="item in clubs.data.teams" :key="item.strTeam">-->
-<!--                <h1>{{ item.strTeam }}</h1>-->
-<!--                <img :src="item.strTeamBadge" alt="">-->
-<!--                <h6>Established: {{ item.intFormedYear }}</h6>-->
-<!--                <h6>Sport: {{ item.strSport }}</h6>-->
-<!--                <h6>League: {{ item.strLeague }}</h6>-->
-<!--                <h6>Stadium: {{ item.strStadium }}</h6>-->
-<!--            </div>-->
-<!--            <div class="col">-->
-<!--            </div>-->
-<!--        </div>-->
+
 
       <div class="indigo darken-1 text-center">
-          <v-card :elevation="24" class=" indigo darken-4 white--text col-md-8 col-10 offset-md-2 offset-1 my-md-10 my-5">
+          <v-card :elevation="24" class=" indigo darken-4 white--text col-md-8 col-sm-10 offset-md-2 offset-sm-1 my-md-10 my-5">
 
-              <img :src="team.strTeamBanner" class="v-picker--full-width mb-5" >
+              <img :src="selectedTeam.strTeamBanner" class="v-picker--full-width mb-5" >
 
+<!--             team description section-->
               <div class="py-8 px-8">
-                  <p v-if="!readMoreTeamDescActivated" > {{team.strDescriptionEN.slice(0, 435)}}...</p>
-                  <p v-if="readMoreTeamDescActivated" > {{team.strDescriptionEN}}</p>
+                  <p v-if="!readMoreTeamDescActivated" > {{selectedTeam.strDescriptionEN.slice(0, 435)}}...</p>
+                  <p v-if="readMoreTeamDescActivated" > {{selectedTeam.strDescriptionEN}}</p>
                   <v-btn small color="indigo lighten-4" v-if="!readMoreTeamDescActivated" @click="activateMoreText">Read More</v-btn>
                   <v-btn small color="indigo lighten-4" v-if="readMoreTeamDescActivated" @click="deactivateMoreText">Read Less</v-btn>
               </div>
 
-              <v-card color="indigo darken-2 white--text" :elevation="10" class="mx-8">
+<!--              team info section-->
+              <v-card color="indigo darken-2 white--text" :elevation="10" class="mx-sm-8">
                   <v-row>
-                      <div class="mx-4 col-md-4">
-                          <v-img :src="team.strTeamBadge"></v-img>
+                      <div class="mx-md-4 col-4 offset-md-0 offset-4">
+                          <v-img :src="selectedTeam.strTeamBadge"></v-img>
                       </div>
-                      <div class="col-md-7">
+                      <div class="col-md-7 ">
                           <v-row v-for="(infoValue, infoKey) in teamInfo[0]" :key="infoKey" >
-                              <div class="col-4 text-right py-0">
-                                  <p class="font-weight-black"> {{infoKey}} </p>
+                              <div class="col-md-4 col-6  text-right py-0">
+                                  <p class="font-weight-black"> {{infoKey}} : </p>
                               </div>
-                              <div class="col-8 text-left py-0">
-                                  <p> {{team[infoValue]}} </p>
+                              <div class="col-md-8 col-6 text-left py-0">
+                                  <p> {{selectedTeam[infoValue]}} </p>
                               </div>
                           </v-row>
                       </div>
                   </v-row>
               </v-card>
 
-              <v-card class="text-left mx-8 my-10" :elevation="10">
+<!--              team players section-->
+              <v-card class="text-left mx-sm-8 my-10" :elevation="10">
                   <v-card-title class="indigo darken-2 white--text headline">
                       Players
                   </v-card-title>
                   <v-row class="pa-4" justify="space-between">
-                      <v-col cols="5">
+                      <div class="col-sm-12 col-md-6 col-lg-5 pr-0">
                           <v-list class="overflow-y-auto" max-height="500" three-line>
                               <template v-for="player in teamPlayers" >
                                   <v-list-item @click="setSelectedPlayer(player)" :key="player.strTeam">
@@ -181,20 +173,16 @@ bottom:   20px;"
                                       </v-list-item-avatar>
                                       <v-list-item-title v-html="player.strPlayer"></v-list-item-title>
                                   </v-list-item>
+                                  <v-divider :key="player.id"></v-divider>
                               </template>
                           </v-list>
-                      </v-col>
+                      </div>
 
-                      <v-divider vertical></v-divider>
-
-                      <v-col
-                              class="d-flex text-center"
-                      >
-                          <v-scroll-y-transition mode="out-in">
+                      <div class="col-lg-6 col-md-5 col-12 text-center pl-0">
                               <div v-if="!selectedPlayer" class="title grey--text text--lighten-1 font-weight-light" style="align-self: center;">
                                   Select a User
                               </div>
-                              <v-card v-else :key="selectedPlayer.id" class="pt-6 mx-auto" flat max-width="400">
+                              <v-card v-else :key="selectedPlayer.id" class="my-10" flat>
                                   <v-card-text>
                                       <v-avatar size="100">
                                           <v-img :src="selectedPlayer.strCutout" class="mb-6"></v-img>
@@ -204,34 +192,55 @@ bottom:   20px;"
                                       </h3>
                                   </v-card-text>
                                   <v-divider></v-divider>
-                                  <v-row class="text-left" tag="v-card-text">
-                                      <v-col class="text-right mr-4 mb-2" tag="strong" cols="5">Date Born:</v-col>
-                                      <v-col>{{selectedPlayer.dateBorn}}</v-col>
-                                      <v-col class="text-right mr-4 mb-2" tag="strong" cols="5">Nationality:</v-col>
-                                      <v-col>{{ selectedPlayer.strNationality }}</v-col>
-                                      <v-col class="text-right mr-4 mb-2" tag="strong" cols="5">Number:</v-col>
-                                      <v-col>{{ selectedPlayer.strNumber }}</v-col>
-                                      <v-col class="text-right mr-4 mb-2" tag="strong" cols="5">Position:</v-col>
-                                      <v-col>{{ selectedPlayer.strPosition }}</v-col>
-                                  </v-row>
-                                  <v-row class="col-md-10 offset-md-1 mx-3">
-                                      <i class="fab fa-facebook"></i>
-                                  </v-row>
+                                  <div class="my-5">
+                                      <v-row class="pa-0">
+                                          <div class="offset-1 offset-md-0 col-5  pa-0 text-right font-regular mr-4 mb-2" tag="strong" cols="6">Date Born:</div>
+                                          <div class="col-5 pa-0 text-left font-weight-light">{{selectedPlayer.dateBorn}}</div>
+                                      </v-row>
+                                      <v-row class="pa-0">
+                                          <div class="offset-1 offset-md-0 col-5  pa-0 text-right  font-regular mr-4 mb-2" tag="strong" cols="6">Nationality:</div>
+                                          <div class="col-5 pa-0 text-left font-weight-light">{{ selectedPlayer.strNationality }}</div>
+                                      </v-row>
+                                      <v-row class="pa-0">
+                                          <div class="offset-1  offset-md-0 col-5 pa-0 text-right font-regular mr-4 mb-2" tag="strong" cols="6">Number:</div>
+                                          <div class="col-5  pa-0 text-left font-weight-light">{{ selectedPlayer.strNumber }}</div>
+                                      </v-row>
+                                      <v-row class="pa-0">
+                                          <div class="offset-1 offset-md-0 col-5 pa-0 text-right font-regular mr-4 mb-2" tag="strong" cols="6">Position:</div>
+                                          <div class="col-5 pa-0 text-left font-weight-light">{{ selectedPlayer.strPosition }}</div>
+                                      </v-row>
+                                      <v-row class="col-md-10 offset-md-1 mx-3">
+                                          <a v-if="selectedPlayer.strFacebook" target="_blank" v-bind:href="'http://' + selectedPlayer.strFacebook"><i class="fab fa-facebook-square fa-2x social-icons" style="color: #153bd4"></i></a>
+                                          <a v-if="selectedPlayer.strTwitter" target="_blank" v-bind:href="'http://' + selectedPlayer.strTwitter"><i class="fab fa-twitter-square fa-2x social-icons" style="color: #3ca5cf"></i></a>
+                                          <a v-if="selectedPlayer.strInstagram" target="_blank" v-bind:href="'http://' + selectedPlayer.strInstagram"><i class="fab fa-instagram-square fa-2x social-icons" style="color: #bd31d6"></i></a>
+                                          <a v-if="selectedPlayer.strYoutube" target="_blank" v-bind:href="'http://' + selectedPlayer.strYoutube"><i class="fab fa-youtube fa-2x social-icons" style="color: red"></i></a>
+                                      </v-row>
+                                  </div>
                               </v-card>
-                          </v-scroll-y-transition>
-                      </v-col>
+                      </div>
                   </v-row>
               </v-card>
 
+<!--              team events section-->
               <v-card class="col-md-6 offset-md-3 pa-0 " :elevation="10">
                   <v-toolbar class="indigo darken-2" dark>
-                      <v-toolbar-title>Inbox</v-toolbar-title>
+                      <v-toolbar-title>Coming Events</v-toolbar-title>
                   </v-toolbar>
                   <v-list two-line>
                       <v-list-item-group>
-<!--                          <template v-for="()">-->
-
-<!--                          </template>-->
+                          <template v-for="(teamEvent, eventIndex) in teamEvents">
+                              <v-list-item :key="eventIndex">
+                                  <v-list-item-content class="text-left">
+                                      <v-list-item-title class="font-weight-black" v-text="teamEvent.strEvent"> </v-list-item-title>
+                                      <v-list-item-subtitle class="text--primary" v-text="teamEvent.strLeague"></v-list-item-subtitle>
+                                  </v-list-item-content>
+                                  <v-list-item-action>
+                                      <v-list-item-action-text v-text="teamEvent.dateEvent" ></v-list-item-action-text>
+                                      <v-list-item-action-text v-text="teamEvent.strTimeLocal" ></v-list-item-action-text>
+                                  </v-list-item-action>
+                              </v-list-item>
+                              <v-divider :key="eventIndex"></v-divider>
+                          </template>
                       </v-list-item-group>
                   </v-list>
               </v-card>
@@ -311,6 +320,7 @@ bottom:   20px;"
                 region: '',
                 category: '',
                 team: '',
+                selectedTeam: null,
                 teamInfo: [{Team:'strTeam', Formed:'intFormedYear', League:'strLeague', Stadium: 'strStadium', Country: 'strCountry'}],
                 teamPlayers: null,
                 selectedPlayer: null,
@@ -372,21 +382,21 @@ bottom:   20px;"
                 }
             };
 
-            axios.get(`https://www.thesportsdb.com/api/v1/json/1/searchteams.php?t=Chelsea`)
+            axios.get(`https://www.thesportsdb.com/api/v1/json/1/searchteams.php?t=Arsenal`)
                 .then(response => {
                     // JSON responses are automatically parsed.
-                    this.team = response.data.teams[0];
-                    console.log(this.team);
+                    this.selectedTeam = response.data.teams[0];
+                    console.log(this.selectedTeam);
                 });
 
-            axios.get(`https://www.thesportsdb.com/api/v1/json/4013017/searchplayers.php?t=Chelsea`)
+            axios.get(`https://www.thesportsdb.com/api/v1/json/4013017/searchplayers.php?t=Arsenal`)
                 .then(response => {
                     // JSON responses are automatically parsed.
                     this.teamPlayers = response.data.player;
                     console.log(this.teamPlayers);
                 });
 
-            axios.get(`https://www.thesportsdb.com/api/v1/json/1/eventsnext.php?id=133738`)
+            axios.get(`https://www.thesportsdb.com/api/v1/json/1/eventsnext.php?id=133604`)
                 .then(response => {
                     // JSON responses are automatically parsed.
                     this.teamEvents = response.data.events;
@@ -549,6 +559,10 @@ bottom:   20px;"
         filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .3));
         /* Similar syntax to box-shadow */
 
+    }
+
+    .social-icons {
+        margin: 15px;
     }
 
     .fade-enter-active, .fade-leave-active {
