@@ -99,7 +99,7 @@ bottom:   20px;"
                 </v-card-actions>
             </v-img>
         </v-card>
-        <div v-if="news">
+        <!-- <div v-if="news">
             <v-carousel light continuous height hide-delimiters>
                 <v-carousel-item class="ma-5" v-for="item in news.data.articles" :key="item.urlToImage">
                     <v-card class="mx-auto" max-width="800">
@@ -123,7 +123,7 @@ bottom:   20px;"
                     </v-card>
                 </v-carousel-item>
             </v-carousel>
-        </div>
+        </div> -->
 
 
       <div class="indigo darken-1 text-center">
@@ -245,6 +245,34 @@ bottom:   20px;"
                   </v-list>
               </v-card>
 
+<!--             Carousel section -->
+                <v-carousel height="400px">
+                    <v-carousel-item
+                        class="carousel__item"
+                        @mouseover="showNews(item)"
+                        @mouseleave="hideNews()"
+                        @click="newsClicked(item)"
+                        v-for="(item,index) in news"
+                        :key="item.urlToImage"
+                        :class="{ active: index == 0 }"
+                        :src="item.urlToImage"
+                        reverse-transition="fade"
+                        transition="fade"
+                    ></v-carousel-item>
+                </v-carousel>
+
+<!--            News section-->
+            <div id="newsContainer" v-if="isShowNews === true">
+                <p>{{ newsToShow.publishedAt.slice() }}</p>
+                <h3 class="text-center">{{ newsToShow.title }}</h3>
+                    <p class="my-5">
+                        <b>{{ newsToShow.description }}</b>
+                    </p>
+                    <p class="mb-5">
+                        {{ newsToShow.content | regExp() }}
+                    <a :href="newsToShow.url" target="_blank" >Click here to read full article</a>
+                    </p>
+            </div>
 
           </v-card>
       </div>
@@ -326,7 +354,10 @@ bottom:   20px;"
                 selectedPlayer: null,
                 teamEvents: null,
                 readMoreTeamDescActivated: false,
-                image: require('@/assets/soccer.jpg')
+                image: require('@/assets/soccer.jpg'),
+                isShowNews: false,
+                newsToShow: null,
+                isNewsClicked: false,
             }
         },
         methods: {
@@ -359,6 +390,20 @@ bottom:   20px;"
             },
             setSelectedPlayer(player) {
                 this.selectedPlayer = player;
+            },
+            showNews(news) {
+                this.isShowNews = true;
+                this.newsToShow = news;
+            },
+            hideNews() {
+                if (this.isNewsClicked == false) {
+                    this.isShowNews = false;
+                }
+            },
+            newsClicked(news) {
+                this.isShowNews = true;
+                this.newsToShow = news;
+                this.isNewsClicked = true;
             }
         },
         filters: {
@@ -403,6 +448,12 @@ bottom:   20px;"
                     console.log(this.teamEvents);
                 });
 
+            axios.get(`http://newsapi.org/v2/top-headlines?country=pl&category=sports&apiKey=${this.apiKey1}`)
+                .then(response => {
+                    // JSON responses are automatically parsed.
+                    this.news = response.data.articles;
+                    console.log(this.news);
+                });
 
             document.addEventListener('readystatechange', readyHandler);
 
