@@ -1,0 +1,26 @@
+<v-card color="rgba(26, 35, 126, 0.5)" class="white--text text-left mx-sm-8 my-10" :elevation="10">
+                <v-carousel 
+                  class="animated fadeIn slower" 
+                  hide-delimiters
+                  touch
+                  continuous
+                  cycle="true">
+                    <v-carousel-item
+                        class="carousel__item"
+                        @mouseover="showNews(item)"
+                        @mouseleave="hideNews()"
+                        @click="newsClicked(item)"
+                        v-for="(item,index) in news"
+                        :key="item.urlToImage"
+                        :class="{ active: index == 0 }"
+                        reverse-transition="fade"
+                        transition="fade"
+                    >
+                    <v-card>
+                      <v-img :src="item.urlToImage" height="400px"></v-img>
+
+                      <v-card-title class="mx-0 my-0">{{ item.title }}</v-card-title>
+                    </v-card>
+                     </v-carousel-item>
+                    
+                </v-carousel>
