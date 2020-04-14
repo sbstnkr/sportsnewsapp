@@ -135,7 +135,7 @@ bottom:   20px;"
               <div class="py-8 px-8">
                   <p v-if="!readMoreTeamDescActivated" > {{selectedTeam.strDescriptionEN.slice(0, 435)}}...</p>
                   <p v-if="readMoreTeamDescActivated" > {{selectedTeam.strDescriptionEN}}</p>
-                  <v-btn small color="indigo lighten-4" v-if="!readMoreTeamDescActivated" @click="activateMoreText">Read More</v-btn>
+                  <v-btn small color="indigo lighten-4" v-if="!readMoreTeamDescActivated  && selectedTeam.strDescriptionEN.length > 435" @click="activateMoreText">Read More</v-btn>
                   <v-btn small color="indigo lighten-4" v-if="readMoreTeamDescActivated" @click="deactivateMoreText">Read Less</v-btn>
               </div>
 
