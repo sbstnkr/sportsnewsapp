@@ -103,15 +103,15 @@ bottom:   20px;"
       <div class="indigo darken-1 text-center">
           <v-card :elevation="24" class=" indigo darken-4 white--text col-md-8 col-sm-10 offset-md-2 offset-sm-1 my-md-10 my-5">
 
-              <div class="Team_Info_container" v-if="firstLoadOfPage!=true">
+              <div class="Team_Info_container" v-if="firstLoadOfPage!=true && selectedTeam">
               <img :src="selectedTeam.strTeamBanner" class="v-picker--full-width mb-5" >
 
 <!--             team description section-->
               <div class="py-8 px-8">
-                  <p v-if="!readMoreTeamDescActivated" > {{selectedTeam.strDescriptionEN.slice(0, 435)}}...</p>
-                  <p v-if="readMoreTeamDescActivated" > {{selectedTeam.strDescriptionEN}}</p>
-                  <v-btn small color="indigo lighten-4" v-if="!readMoreTeamDescActivated  && selectedTeam.strDescriptionEN.length > 435" @click="activateMoreText">Read More</v-btn>
-                  <v-btn small color="indigo lighten-4" v-if="readMoreTeamDescActivated" @click="deactivateMoreText">Read Less</v-btn>
+                  <p v-if="!readMoreTeamDescActivated && isTeamDescToggleButton()" > {{selectedTeam.strDescriptionEN.slice(0, 435)}}...</p>
+                  <p v-else > {{selectedTeam.strDescriptionEN}}</p>
+                  <v-btn small color="indigo lighten-4" v-if="!readMoreTeamDescActivated  && isTeamDescToggleButton()" @click="activateMoreText">Read More</v-btn>
+                  <v-btn small color="indigo lighten-4" v-else-if="readMoreTeamDescActivated && isTeamDescToggleButton()" @click="deactivateMoreText">Read Less</v-btn>
               </div>
 
 <!--              team info section-->
@@ -340,6 +340,7 @@ bottom:   20px;"
                 team: '',
                 selectedTeam: null,
                 teamInfo: [{Team:'strTeam', Formed:'intFormedYear', League:'strLeague', Stadium: 'strStadium', Country: 'strCountry'}],
+                teamDescToggleButton: false,
                 teamPlayers: null,
                 selectedPlayer: null,
                 teamEvents: null,
@@ -386,6 +387,10 @@ bottom:   20px;"
                 this.isShowNews = true;
                 this.newsToShow = news;
                 this.isNewsClicked = true;
+            },
+            isTeamDescToggleButton()
+            {
+                return this.selectedTeam.strDescriptionEN.length > 435 ? true : false;
             }
         },
         filters: {
