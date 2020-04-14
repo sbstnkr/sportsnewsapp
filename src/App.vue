@@ -246,11 +246,9 @@ bottom:   20px;"
               </v-card>
 
 <!--             Carousel section -->
-                <v-carousel height="400px">
+                <v-carousel height="400px" hide-delimiters @change="newsToShow = news[$event]">
                     <v-carousel-item
                         class="carousel__item"
-                        @mouseover="showNews(item)"
-                        @mouseleave="hideNews()"
                         @click="newsClicked(item)"
                         v-for="(item,index) in news"
                         :key="item.urlToImage"
@@ -263,7 +261,7 @@ bottom:   20px;"
 
 <!--            News section-->
             <div id="newsContainer" v-if="isShowNews === true">
-                <p>{{ newsToShow.publishedAt.slice() }}</p>
+                <p>{{ newsToShow.publishedAt.replace("T", " ").replace("Z", "") }}</p>
                 <h3 class="text-center">{{ newsToShow.title }}</h3>
                     <p class="my-5">
                         <b>{{ newsToShow.description }}</b>
@@ -390,15 +388,6 @@ bottom:   20px;"
             },
             setSelectedPlayer(player) {
                 this.selectedPlayer = player;
-            },
-            showNews(news) {
-                this.isShowNews = true;
-                this.newsToShow = news;
-            },
-            hideNews() {
-                if (this.isNewsClicked == false) {
-                    this.isShowNews = false;
-                }
             },
             newsClicked(news) {
                 this.isShowNews = true;
