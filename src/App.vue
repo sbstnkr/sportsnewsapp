@@ -99,36 +99,11 @@ bottom:   20px;"
                 </v-card-actions>
             </v-img>
         </v-card>
-        <!-- <div v-if="news">
-            <v-carousel light continuous height hide-delimiters>
-                <v-carousel-item class="ma-5" v-for="item in news.data.articles" :key="item.urlToImage">
-                    <v-card class="mx-auto" max-width="800">
-                        <v-img :src="item.urlToImage" height="200px"></v-img>
-                        <v-card-title>{{ item.title }}</v-card-title>
-                        <v-card-subtitle>{{ item.description }}</v-card-subtitle>
-                        <v-card-actions>
-                            <v-btn icon @click="show = !show">
-                                <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-                            </v-btn>
-                        </v-card-actions>
-                        <v-expand-transition>
-                            <div v-show="show">
-                                <v-divider></v-divider>
-                                <v-card-text>
-                                    {{ item.content | regExp }}
-                                    <a :href="item.url" target="_blank">Click here to read full article </a>
-                                </v-card-text>
-                            </div>
-                        </v-expand-transition>
-                    </v-card>
-                </v-carousel-item>
-            </v-carousel>
-        </div> -->
-
 
       <div class="indigo darken-1 text-center">
           <v-card :elevation="24" class=" indigo darken-4 white--text col-md-8 col-sm-10 offset-md-2 offset-sm-1 my-md-10 my-5">
 
+              <div class="Team_Info_container" v-if="firstLoadOfPage!=true">
               <img :src="selectedTeam.strTeamBanner" class="v-picker--full-width mb-5" >
 
 <!--             team description section-->
@@ -244,22 +219,39 @@ bottom:   20px;"
                       </v-list-item-group>
                   </v-list>
               </v-card>
+            </div>
 
 <!--             Carousel section -->
-                <v-carousel height="400px" hide-delimiters @change="newsToShow = news[$event]">
-                    <v-carousel-item
-                        class="carousel__item"
-                        @click="newsClicked(item)"
-                        v-for="(item,index) in news"
-                        :key="item.urlToImage"
-                        :class="{ active: index == 0 }"
-                        :src="item.urlToImage"
-                        reverse-transition="fade"
-                        transition="fade"
-                    ></v-carousel-item>
-                </v-carousel>
+            <v-card
+              color="rgba(26, 35, 126, 0.5)"
+              class="white--text text-left mx-sm-8 my-10"
+              :elevation="10"
+            >
+              <v-card-title class="indigo darken-2 white--text headline">Sport News</v-card-title>
+              <v-carousel
+                class="animated fadeIn slower"
+                hide-delimiters
+                @change="newsToShow = news[$event]"
+              >
+                <v-carousel-item
+                  class="carousel__item"
+                  @click="newsClicked(item)"
+                  v-for="(item,index) in news"
+                  :key="item.urlToImage"
+                  :class="{ active: index == 0 }"
+                  reverse-transition="fade"
+                  transition="fade"
+                >
+                  <v-card>
+                    <v-img :src="item.urlToImage" height="400px"></v-img>
+                    <v-card-title class="mx-0 my-0">{{ item.title.slice(0,lengthOfNewsTitle) }}...</v-card-title>
+                  </v-card>
+                </v-carousel-item>
+              </v-carousel>
+            </v-card>
 
 <!--            News section-->
+          <v-card color="indigo darken-2 white--text" :elevation="10" class="mx-sm-8">
             <div id="newsContainer" v-if="isShowNews === true">
                 <p>{{ newsToShow.publishedAt.replace("T", " ").replace("Z", "") }}</p>
                 <h3 class="text-center">{{ newsToShow.title }}</h3>
@@ -271,7 +263,7 @@ bottom:   20px;"
                     <a :href="newsToShow.url" target="_blank" >Click here to read full article</a>
                     </p>
             </div>
-
+            </v-card>
           </v-card>
       </div>
 
@@ -356,20 +348,21 @@ bottom:   20px;"
                 isShowNews: false,
                 newsToShow: null,
                 isNewsClicked: false,
+                firstLoadOfPage: true,
+                lengthOfNewsTitle: 56,
             }
         },
         methods: {
             fetchApi() {
                 axios.all([
-                    axios.get(`${this.urlBase1}${this.category}&language=en&sortBy=publishedAt&apiKey=${this.apiKey1}`),
                     axios.get(`${this.urlBase2}${this.apiKey2}/searchteams.php?t=${this.team}`)
                 ])
                     .then(response => (
-                        this.news = response[0],
-                            this.clubs = response[1]
+                        this.clubs = response[1]
                     ));
                 console.log(this.news),
-                    console.log(this.clubs)
+                console.log(this.clubs),
+                this.firstLoadOfPage=false;
             },
             handleFirstInput(value) {
                 this.region = value.country;
@@ -501,14 +494,6 @@ bottom:   20px;"
                     return Object.assign({}, team, {strTeam})
                 })
             },
-
-            // selected () {
-            //     if (!this.active.length) return undefined
-            //
-            //     const id = this.active[0]
-            //
-            //     return this.users.find(user => user.id === id)
-            // },
         },
         watch: {
             firstSearch() {
