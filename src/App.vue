@@ -6,13 +6,14 @@
         prominent 
         type="error" 
         color="pink" 
-        dark border="top">
+        dark border="top"
+        class="animated bounceIn">
         <v-row align="center">
           <v-col class="grow mb-0">No matching results for this particular country and sports category, try again with different values!</v-col>
           <v-col class="shrink">
             <v-btn 
             icon 
-            @click="overlay = false; secondModel = null; thirdModel = null; category = ''; team = ''; categories = []; teams = []; image = require('@/assets/Soccer.jpeg'); placeholder = 'e.g. Lech Poznan'; icon = 'mdi-soccer'; clubs = null">X</v-btn>
+            @click="loadedOnce = false; overlay = false; secondModel = null; thirdModel = null; category = ''; team = ''; categories = []; teams = []; teamPlayers = null, selectedPlayer = null, teamEvents = null; animated = true; readMoreTeamDescActivated = false; image = require('@/assets/Soccer.jpeg'); placeholder = 'e.g. Lech Poznan'; icon = 'mdi-soccer'; selectedTeam = null">X</v-btn>
           </v-col>
         </v-row>
       </v-alert>
@@ -23,25 +24,41 @@
       dark 
       class="d-flex flex-column">      
         <v-card-title class="headline deep-purple lighten-1">
-          Search for your favourite team
+          <span 
+            class="animated flipInX"
+            style="animation-delay: 500ms">
+            Search for your favourite team
+            </span>
           <v-spacer></v-spacer>
-          <span class="caption font-italic font-weight-light delay-1s">SPORTSNEWSAPP</span>
+          <span 
+            class="caption font-italic font-weight-light animated bounceInRight"
+            style="animation-delay: 750ms">
+            SPORTSNEWSAPP</span>
           <v-icon right>mdi-newspaper-variant-multiple-outline</v-icon> 
         </v-card-title>
         <v-img 
           :src="image" 
           :key="image" 
           height="600" 
-          gradient="to bottom right, rgba(100,115,201,.75), rgba(25,32,72,.5)">
-        <v-card-text class="overline">
+          gradient="to bottom right, rgba(100,115,201,.75), rgba(25,32,72,.5)"
+          class="animated fadeIn">
+        <v-card-text 
+          class="overline animated"
+          :class="{flipInX : loadedOnce}"
+          style="animation-delay: 500ms">
           Explore hundreds of sports clubs worldwide!
         </v-card-text>
         <v-card-text class="mb-10">
-          <v-card-text>
+          <v-card-text 
+            class="animated"
+            :class="{flipInX : loadedOnce}"
+            style="animation-delay: 500ms">
             Choose:
           </v-card-text>
           <v-autocomplete
-            class="d-inline-flex elevation-22 mr-5 mb-5 mt-3 pl-5 pr-2"
+            class="d-inline-flex elevation-22 mr-5 mb-5 mt-3 pl-5 pr-2 animated"
+            :class="{flipInX : loadedOnce}"
+            style="animation-delay: 750ms;"
             v-model="firstModel"
             :items="firstItems"
             :search-input.sync="firstSearch"
@@ -56,10 +73,12 @@
             prepend-icon="mdi-flag-variant-outline"
             return-object
             @input="handleFirstInput"
-            @change="thirdModel = null; team = ''; teams = []">
+            @change="loadedOnce = false; readMoreTeamDescActivated = false; thirdModel = null; team = ''; teams = []; selectedTeam = null; teamPlayers = null; selectedPlayer = null; teamEvents = null; animated = true">
           </v-autocomplete>
           <v-autocomplete
-            class="d-inline-flex elevation-23 mr-5 mb-5 pl-5 pr-2"
+            class="d-inline-flex elevation-23 mr-5 mb-5 pl-5 pr-2 animated"
+            :class="{flipInX : loadedOnce}"
+            style="animation-delay: 1250ms"
             v-model="secondModel"
             :items="secondItems"
             :search-input.sync="secondSearch"
@@ -74,10 +93,12 @@
             :prepend-icon="icon"
             return-object
             @input="handleSecondInput"
-            @change="thirdModel = null; team = ''; teams = []">
+            @change="loadedOnce = false; readMoreTeamDescActivated = false; thirdModel = null; team = ''; teams = []; selectedTeam = null; teamPlayers = null; selectedPlayer = null; teamEvents = null; animated = true">
           </v-autocomplete>
           <v-autocomplete
-            class="d-inline-flex elevation-24 pl-5 pr-2"
+            class="d-inline-flex elevation-24 pl-5 pr-2 animated"
+            :class="{flipInX : loadedOnce}"
+            style="animation-delay: 1750ms"
             v-model="thirdModel"
             :items="thirdItems"
             :search-input.sync="thirdSearch"
@@ -92,7 +113,8 @@
             prepend-icon="mdi-account-group-outline"
             return-object
             :disabled="!(firstModel && secondModel)"
-            @input="handleThirdInput">
+            @input="handleThirdInput"
+            @change="loadedOnce = false; readMoreTeamDescActivated = false; selectedTeam = null; teamPlayers = null; selectedPlayer = null; teamEvents = null; animated = true">
           </v-autocomplete>
         </v-card-text>
         <v-card-actions class="ma-5">
@@ -100,6 +122,8 @@
             :disabled="!thirdModel"
             color="grey darken-1"
             @click="fetchApi"
+            class="animated"
+            :class="{pulse: thirdModel}"
             style="position: absolute; left: 25px; bottom: 20px;">
             <v-icon right>mdi-magnify</v-icon>
             Search
@@ -108,7 +132,7 @@
           <v-btn
             :disabled="!(firstModel || secondModel || thirdModel)"
             color="grey darken-1"
-            @click="firstModel = ''; secondModel = null; thirdModel = null; category = ''; team = ''; region = ''; categories = []; teams = []; countries = []; image = require('@/assets/Soccer.jpeg'); placeholder = 'e.g. Lech Poznan'; icon = 'mdi-soccer'; clubs = null"
+            @click="loadedOnce = false; readMoreTeamDescActivated = false; firstModel = ''; secondModel = null; thirdModel = null; category = ''; team = ''; region = ''; categories = []; teams = []; countries = []; selectedTeam = null; teamPlayers = null; selectedPlayer = null; teamEvents = null; animated = true; image = require('@/assets/Soccer.jpeg'); placeholder = 'e.g. Lech Poznan'; icon = 'mdi-soccer';"
             style="position: absolute; right: 25px; bottom: 20px;">
             Clear
             <v-icon right>mdi-close-circle</v-icon>
@@ -116,38 +140,214 @@
         </v-card-actions>
       </v-img>
     </v-card>
+    <v-card>
+     <v-img src="./assets/background.png" gradient="to top left, rgba(100,115,201,.75), rgba(70,70,70,.85)">
+          <v-card :elevation="24" color="rgba(26, 35, 126, 0.5)" class="white--text col-md-8 col-sm-10 offset-md-2 offset-sm-1 my-md-10 my-5">
+            <div v-if="selectedTeam">
+<!--             tooltip section-->
+             <div 
+             class="d-flex justify-center animated pulse"
+             :class="{infinite: animated}"
+             >
+              <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+              <v-icon size=85 color="white" @mouseover="animated = false" v-on="on">{{ icon }}</v-icon>
+              </template>
+              <span>{{ description }}</span>
+              </v-tooltip>
+              </div>
+      <div class="indigo darken-1 text-center">
+          <v-card :elevation="24" class=" indigo darken-4 white--text col-md-8 col-sm-10 offset-md-2 offset-sm-1 my-md-10 my-5">
+
+              <div class="Team_Info_container" v-if="firstLoadOfPage!=true">
+              <img :src="selectedTeam.strTeamBanner" class="v-picker--full-width mb-5" >
+
+<!--             team description section-->
+              <div class="py-8 px-8">
+                  <p v-if="!readMoreTeamDescActivated" > {{selectedTeam.strDescriptionEN.slice(0, 435)}}...</p>
+                  <p v-if="readMoreTeamDescActivated" > {{selectedTeam.strDescriptionEN}}</p>
+                  <v-btn small color="indigo lighten-4" v-if="!readMoreTeamDescActivated  && selectedTeam.strDescriptionEN.length > 435" @click="activateMoreText">Read More</v-btn>
+                  <v-btn small color="indigo lighten-4" v-if="readMoreTeamDescActivated" @click="deactivateMoreText">Read Less</v-btn>
+              </div>
+
+<!--              team info section-->
+              <v-card color="indigo darken-2 white--text" :elevation="10" class="mx-sm-8">
+                  <v-row>
+                      <div class="mx-md-4 col-4 offset-md-0 offset-4">
+                          <v-img :src="selectedTeam.strTeamBadge"></v-img>
+                      </div>
+                      <div class="col-md-7 ">
+                          <v-row v-for="(infoValue, infoKey) in teamInfo[0]" :key="infoKey" >
+                              <div class="col-md-4 col-6  text-right py-0">
+                                  <p class="font-weight-black"> {{infoKey}} : </p>
+                              </div>
+                              <div class="col-md-8 col-6 text-left py-0">
+                                  <p> {{selectedTeam[infoValue]}} </p>
+                              </div>
+                          </v-row>
+                      </div>
+                  </v-row>
+              </v-card>
+
+<!--              team players section-->
+              <v-card class="text-left mx-sm-8 my-10" :elevation="10">
+                  <v-card-title class="indigo darken-2 white--text headline">
+                      Players
+                  </v-card-title>
+                  <v-row class="pa-4" justify="space-between">
+                      <div class="col-sm-12 col-md-6 col-lg-5 pr-0">
+                          <v-list class="overflow-y-auto" max-height="500" three-line>
+                              <template v-for="player in teamPlayers" >
+                                  <v-list-item @click="setSelectedPlayer(player)" :key="player.strTeam">
+                                      <v-list-item-avatar>
+                                          <v-img :src="player.strCutout"></v-img>
+                                      </v-list-item-avatar>
+                                      <v-list-item-title v-html="player.strPlayer"></v-list-item-title>
+                                  </v-list-item>
+                                  <v-divider :key="player.id"></v-divider>
+                              </template>
+                          </v-list>
+                      </div>
+
+                      <div class="col-lg-6 col-md-5 col-12 text-center pl-0">
+                              <div v-if="!selectedPlayer" class="title grey--text text--lighten-1 font-weight-light" style="align-self: center;">
+                                  Select a User
+                              </div>
+                              <v-card v-else :key="selectedPlayer.id" class="my-10" flat>
+                                  <v-card-text>
+                                      <v-avatar size="100">
+                                          <v-img :src="selectedPlayer.strCutout" class="mb-6"></v-img>
+                                      </v-avatar>
+                                      <h3 class="headline mb-2">
+                                          {{ selectedPlayer.strPlayer }}
+                                      </h3>
+                                  </v-card-text>
+                                  <v-divider></v-divider>
+                                  <div class="my-5">
+                                      <v-row class="pa-0">
+                                          <div class="offset-1 offset-md-0 col-5  pa-0 text-right font-regular mr-4 mb-2" tag="strong" cols="6">Date Born:</div>
+                                          <div class="col-5 pa-0 text-left font-weight-light">{{selectedPlayer.dateBorn}}</div>
+                                      </v-row>
+                                      <v-row class="pa-0">
+                                          <div class="offset-1 offset-md-0 col-5  pa-0 text-right  font-regular mr-4 mb-2" tag="strong" cols="6">Nationality:</div>
+                                          <div class="col-5 pa-0 text-left font-weight-light">{{ selectedPlayer.strNationality }}</div>
+                                      </v-row>
+                                      <v-row class="pa-0">
+                                          <div class="offset-1  offset-md-0 col-5 pa-0 text-right font-regular mr-4 mb-2" tag="strong" cols="6">Number:</div>
+                                          <div class="col-5  pa-0 text-left font-weight-light">{{ selectedPlayer.strNumber }}</div>
+                                      </v-row>
+                                      <v-row class="pa-0">
+                                          <div class="offset-1 offset-md-0 col-5 pa-0 text-right font-regular mr-4 mb-2" tag="strong" cols="6">Position:</div>
+                                          <div class="col-5 pa-0 text-left font-weight-light">{{ selectedPlayer.strPosition }}</div>
+                                      </v-row>
+                                      <v-row class="col-md-10 offset-md-1 mx-3">
+                                          <a v-if="selectedPlayer.strFacebook" target="_blank" v-bind:href="'http://' + selectedPlayer.strFacebook"><i class="fab fa-facebook-square fa-2x social-icons" style="color: #153bd4"></i></a>
+                                          <a v-if="selectedPlayer.strTwitter" target="_blank" v-bind:href="'http://' + selectedPlayer.strTwitter"><i class="fab fa-twitter-square fa-2x social-icons" style="color: #3ca5cf"></i></a>
+                                          <a v-if="selectedPlayer.strInstagram" target="_blank" v-bind:href="'http://' + selectedPlayer.strInstagram"><i class="fab fa-instagram-square fa-2x social-icons" style="color: #bd31d6"></i></a>
+                                          <a v-if="selectedPlayer.strYoutube" target="_blank" v-bind:href="'http://' + selectedPlayer.strYoutube"><i class="fab fa-youtube fa-2x social-icons" style="color: red"></i></a>
+                                      </v-row>
+                                  </div>
+                              </v-card>
+                      </div>
+                  </v-row>
+              </v-card>
+
+<!--              team events section-->
+              <v-card class="col-md-6 offset-md-3 pa-0 " :elevation="10">
+                  <v-toolbar class="indigo darken-2" dark>
+                      <v-toolbar-title>Coming Events</v-toolbar-title>
+                  </v-toolbar>
+                  <v-list two-line>
+                      <v-list-item-group>
+                          <template v-for="(teamEvent, eventIndex) in teamEvents">
+                              <v-list-item :key="eventIndex">
+                                  <v-list-item-content class="text-left">
+                                      <v-list-item-title class="font-weight-black" v-text="teamEvent.strEvent"> </v-list-item-title>
+                                      <v-list-item-subtitle class="text--primary" v-text="teamEvent.strLeague"></v-list-item-subtitle>
+                                  </v-list-item-content>
+                                  <v-list-item-action>
+                                      <v-list-item-action-text v-text="teamEvent.dateEvent" ></v-list-item-action-text>
+                                      <v-list-item-action-text v-text="teamEvent.strTimeLocal" ></v-list-item-action-text>
+                                  </v-list-item-action>
+                              </v-list-item>
+                              <v-divider :key="eventIndex"></v-divider>
+                          </template>
+                      </v-list-item-group>
+                  </v-list>
+              </v-card>
+            </div>
+
+<!--             Carousel section -->
+            <v-card
+              color="rgba(26, 35, 126, 0.5)"
+              class="white--text text-left mx-sm-8 my-10"
+              :elevation="10"
+            >
+              <v-card-title class="indigo darken-2 white--text headline">Sport News</v-card-title>
+              <v-carousel
+                class="animated fadeIn slower"
+                hide-delimiters
+                @change="newsToShow = news[$event]"
+              >
+                <v-carousel-item
+                  class="carousel__item"
+                  @click="newsClicked(item)"
+                  v-for="(item,index) in news"
+                  :key="item.urlToImage"
+                  :class="{ active: index == 0 }"
+                  reverse-transition="fade"
+                  transition="fade"
+                >
+                  <v-card>
+                    <v-img :src="item.urlToImage" height="400px"></v-img>
+                    <v-card-title class="mx-0 my-0">{{ item.title.slice(0,lengthOfNewsTitle) }}...</v-card-title>
+                  </v-card>
+                </v-carousel-item>
+              </v-carousel>
+            </v-card>
+
+<!--            News section-->
+          <v-card color="indigo darken-2 white--text" :elevation="10" class="mx-sm-8">
+            <div id="newsContainer" v-if="isShowNews === true">
+                <p>{{ newsToShow.publishedAt.replace("T", " ").replace("Z", "") }}</p>
+                <h3 class="text-center">{{ newsToShow.title }}</h3>
+                    <p class="my-5">
+                        <b>{{ newsToShow.description }}</b>
+                    </p>
+                    <p class="mb-5">
+                        {{ newsToShow.content | regExp() }}
+                    <a :href="newsToShow.url" target="_blank" >Click here to read full article</a>
+                    </p>
+            </div>
+            </v-card>
+          </v-card>
+      </div>
+
 <!--             Footer section -->
-    <v-footer
-      dark
-      padless>
-      <v-card
-        flat
-        tile
-        class="indigo lighten-1 white--text text-center"
-        width="100%">
-        <v-card-text>
-          powered by
-        </v-card-text>
-        <v-row class="pt-0 d-flex justify-center">
-          <v-img class="mr-5 shadow" max-width="7%" max-height="100%" src="https://images-apilist-fun.sfo2.cdn.digitaloceanspaces.com/the_sports_db_api.png"></v-img>
-          <v-img class="mx-5 shadow2" max-width="10%" height="100%" src="./assets/newsapi.png"></v-img>
-          <v-img class="ml-5 shadow" max-width="7%" max-height="100%" src="https://www.api-football.com/public/img/home1/hero-banner1.png"></v-img>
-        </v-row>
-        <v-divider class="mx-10 mt-5"></v-divider>
-        <v-card-text class="white--text">
-          <strong>{{ new Date().getFullYear() }} ©</strong>
-        </v-card-text>
-      </v-card>
-    </v-footer>
+    <CreditFooter/>
   </v-app>
 </template>
 
+
 <script>
+import axios from 'axios'
+import CreditFooter from './components/CreditFooter.vue'
 
 export default {
   name: 'App',
+  components: {
+    CreditFooter
+  },
   data () {
     return {
+      apiKey1: '15de284d0e884be19dcf6c92c4a88205',
+      apiKey2: '4013017',
+      urlBase: 'https://www.thesportsdb.com/api/v1/json/',
+      selectedTeam: null,
+      news: null,
+      show: false,
+      loading: true,
+      loaded: false,
       count: [],
       countries: [],
       categories: [], 
@@ -197,15 +397,45 @@ export default {
       'e.g. Rot-Weiss Köln'
       ],
       overlay: false,
-      alert: true
+      alert: true,
+      teamInfo: [{Team:'strTeam', Formed:'intFormedYear', League:'strLeague', Stadium: 'strStadium', Country: 'strCountry'}],
+      teamPlayers: null,
+      selectedPlayer: null,
+      teamEvents: null,
+      readMoreTeamDescActivated: false,
+      isShowNews: false,
+      newsToShow: null,
+      isNewsClicked: false,
+      animated: true,
+      description: '',
+      loadedOnce: true,
+      firstLoadOfPage: true,
+      lengthOfNewsTitle: 56,
     }
   },
   methods: {
+    fetchApi() {
+      axios.all([
+        axios.get(`${this.urlBase}${this.apiKey2}/searchteams.php?t=${this.team}`),
+        axios.get(`${this.urlBase}${this.apiKey2}/searchplayers.php?t=${this.team}`)
+                ])
+          .then(response => (
+            this.selectedTeam = response[0].data.teams[0],
+            console.log(this.selectedTeam),
+            this.teamPlayers = response[1].data.player,
+            axios.get(`${this.urlBase}${this.apiKey2}/eventsnext.php?id=${this.selectedTeam.idTeam}`)
+                .then(response => {
+                    this.teamEvents = response.data.events;
+                })
+                    ));
+        
+      },
     handleFirstInput (value) {
       this.region = value.country;
       },
     handleSecondInput (value) {
       this.category = value.strSport;
+      this.description = value.strSportDescription
       var i;
       for (i = 0; i < this.categories.length; i++) {
         if (this.category == `${this.categories[i].strSport}`) {
@@ -215,8 +445,46 @@ export default {
           }}},
     handleThirdInput (value) {
       this.team = value.strTeam;
+      console.log(this.team)
       },
+    activateMoreText() {
+        this.readMoreTeamDescActivated = true;
+    },
+    deactivateMoreText() {
+        this.readMoreTeamDescActivated = false;
+    },
+    setSelectedPlayer(player) {
+        this.selectedPlayer = player;
+    },
+    showNews(news) {
+        this.isShowNews = true;
+        this.newsToShow = news;
+    },
+    hideNews() {
+        if (this.isNewsClicked == false) {
+            this.isShowNews = false;
+        }
+    },
+    newsClicked(news) {
+        this.isShowNews = true;
+        this.newsToShow = news;
+        this.isNewsClicked = true;
+    }
   },
+  filters: {
+    regExp(string) {
+        return string.replace(/\[.*?\]/g, '').replace(/<\/?[^>]+(>|$)/g, '');
+    }
+},
+created() {
+  axios.get(`https://newsapi.org/v2/top-headlines?country=gb&category=sports&apiKey=${this.apiKey1}`)
+                .then(response => {
+                    this.news = response.data.articles;
+                    for (var i = 0; i < this.news.length; i++)
+                if (this.news[i].urlToImage == null) {
+                this.news.splice(i,1);
+                }});
+},
   computed: {
     firstFields () {
         if (!this.firstModel) return []
@@ -265,9 +533,9 @@ export default {
       thirdItems () {
         return this.teams.map(team => {
           const strTeam = team.strTeam
-
           return Object.assign({}, team, { strTeam })
         })
+        
       }
   },
   watch: {
@@ -309,7 +577,6 @@ export default {
             for (var index of indexes) {
             delete this.categories[keys[index]]}
             this.categories = this.categories.filter(function() { return true; })
-              
           })
           .catch(err => {
             console.log(err)
@@ -324,9 +591,19 @@ export default {
             .then(res => {
               if (res.teams != null) {
               const { teams } = res
-              this.teams = teams}
+              this.teams = teams
+              for (var i = 0; i < this.teams.length; i++)
+                if (this.teams[i].strTeam.startsWith('_')) {
+                this.teams.splice(i,1);
+                if (this.teams.length == 0) {
+                  this.overlay = true
+                  this.thirdSearch = null
+                }
+                }
+              }
               else {this.overlay = true
               this.thirdSearch = null
+              
               }
             })
             .catch(err => {
@@ -339,18 +616,10 @@ export default {
 </script>
 
 <style scoped>
-.shadow {
-  -webkit-filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
-  filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
-  /* Similar syntax to box-shadow */
-}
 
-.shadow2 {
-  -webkit-filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .3));
-  filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .3));
-  /* Similar syntax to box-shadow */
-
-}
+.social-icons {
+        margin: 15px;
+    }
 
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;
@@ -358,4 +627,18 @@ export default {
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
+
+.carousel__item {
+  filter: brightness(60%)
+}
+
+#logo {
+  -webkit-filter: drop-shadow( 3px 3px 7.5px rgba(0, 0, 0, .7));
+  filter: drop-shadow( 3px 3px 7.5px rgba(0, 0, 0, .7));
+}
+
+#banner {
+  filter: brightness(90%)
+}
+
 </style>
