@@ -141,7 +141,6 @@
       </v-img>
     </v-card>
     <v-card>
-     <v-img src="./assets/background.png" gradient="to top left, rgba(100,115,201,.75), rgba(70,70,70,.85)">
           <v-card :elevation="24" color="rgba(26, 35, 126, 0.5)" class="white--text col-md-8 col-sm-10 offset-md-2 offset-sm-1 my-md-10 my-5">
             <div v-if="selectedTeam">
 <!--             tooltip section-->
@@ -321,7 +320,10 @@
             </div>
             </v-card>
           </v-card>
-      </div>
+          </div>
+        </div>
+    </v-card>
+  </v-card>
 
 <!--             Footer section -->
     <CreditFooter/>
