@@ -1,102 +1,139 @@
 <template>
     <v-app>
-        <v-card color="teal accent-3" dark class="d-flex flex-column">
-            <v-img :src="image" :key="image" height="600"
-                   gradient="to bottom right, rgba(100,115,201,.75), rgba(25,32,72,.5)">
+<!--             Alert section -->
+        <v-overlay :value="overlay">
+        <v-alert 
+            prominent 
+            type="error" 
+            color="pink" 
+            dark border="top"
+            class="animated bounceIn">
+            <v-row align="center">
+            <v-col class="grow mb-0">No matching results for this particular country and sports category, try again with different values!</v-col>
+            <v-col class="shrink">
+                <v-btn 
+                icon 
+                @click="loadedOnce = false; overlay = false; secondModel = null; thirdModel = null; category = ''; team = ''; categories = []; teams = []; teamPlayers = null, selectedPlayer = null, teamEvents = null; animated = true; readMoreTeamDescActivated = false; image = require('@/assets/Soccer.jpeg'); placeholder = 'e.g. Lech Poznan'; icon = 'mdi-soccer'; selectedTeam = null">X</v-btn>
+            </v-col>
+            </v-row>
+        </v-alert>
+        </v-overlay>
+        <v-card color="deep-purple lighten-1" dark class="d-flex flex-column">
                 <v-card-title class="headline deep-purple lighten-1">
+                    <span 
+                    class="animated flipInX"
+                    style="animation-delay: 500ms">
                     Search for your favourite team
+                    </span>
                     <v-spacer></v-spacer>
-                    <span class="caption font-italic font-weight-light">SPORTSNEWSAPP</span>
+                    <span 
+                    class="caption font-italic font-weight-light animated bounceInRight"
+                    style="animation-delay: 750ms">
+                    SPORTSNEWSAPP</span>
                     <v-icon right>mdi-newspaper-variant-multiple-outline</v-icon>
                 </v-card-title>
-                <v-card-text class="mt-5 overline">
-                    Explore hundreds of sports clubs worldwide!
+                <v-img 
+                    :src="image" 
+                    :key="image" 
+                    height="600" 
+                    gradient="to bottom right, rgba(100,115,201,.75), rgba(25,32,72,.5)"
+                    class="animated fadeIn">
+                <v-card-text 
+                class="overline animated"
+                :class="{flipInX : loadedOnce}"
+                style="animation-delay: 500ms">
+                Explore hundreds of sports clubs worldwide!
                 </v-card-text>
                 <v-card-text class="mb-10">
-                    <v-card-text>
-                        Choose:
+                    <v-card-text 
+                    class="animated"
+                    :class="{flipInX : loadedOnce}"
+                    style="animation-delay: 500ms">
+                    Choose:
                     </v-card-text>
                     <v-autocomplete
-                            class="d-inline-flex elevation-22 mr-5 mb-5 mt-3 pl-5 pr-2"
-                            v-model="firstModel"
-                            :items="firstItems"
-                            :loading="firstIsLoading"
-                            :search-input.sync="firstSearch"
-                            color="white"
-                            hide-no-data
-                            hide-selected
-                            rounded
-                            item-text="country"
-                            item-value="code"
-                            label="country"
-                            placeholder="e.g. Poland"
-                            prepend-icon="mdi-flag-variant-outline"
-                            return-object
-                            @input="handleFirstInput"
-                    ></v-autocomplete>
+                    class="d-inline-flex elevation-22 mr-5 mb-5 mt-3 pl-5 pr-2 animated"
+                    :class="{flipInX : loadedOnce}"
+                    style="animation-delay: 750ms;"
+                    v-model="firstModel"
+                    :items="firstItems"
+                    :search-input.sync="firstSearch"
+                    color="white"
+                    hide-no-data
+                    hide-selected
+                    rounded
+                    item-text="country"
+                    item-value="code"
+                    label="country"
+                    placeholder="e.g. Poland"
+                    prepend-icon="mdi-flag-variant-outline"
+                    return-object
+                    @input="handleFirstInput"
+                    @change="loadedOnce = false; readMoreTeamDescActivated = false; thirdModel = null; team = ''; teams = []; selectedTeam = null; teamPlayers = null; selectedPlayer = null; teamEvents = null; animated = true">
+                </v-autocomplete>
                     <v-autocomplete
-                            class="d-inline-flex elevation-23 mr-5 mb-5 pl-5 pr-2"
-                            v-model="secondModel"
-                            :items="secondItems"
-                            :loading="secondIsLoading"
-                            :search-input.sync="secondSearch"
-                            color="white"
-                            hide-no-data
-                            hide-selected
-                            rounded
-                            item-text="strSport"
-                            item-value="idSport"
-                            label="sports category"
-                            placeholder="e.g. Soccer"
-                            prepend-icon="mdi-soccer"
-                            return-object
-                            @input="handleSecondInput"
-                    ></v-autocomplete>
-                    <v-autocomplete
-                            class="d-inline-flex elevation-24 pl-5 pr-2"
-                            v-model="thirdModel"
-                            :items="thirdItems"
-                            :loading="thirdIsLoading"
-                            :search-input.sync="thirdSearch"
-                            color="white"
-                            hide-no-data
-                            hide-selected
-                            rounded
-                            item-text="strTeam"
-                            item-value="idTeam"
-                            label="team"
-                            placeholder="e.g. Lech Poznan"
-                            prepend-icon="mdi-account-group-outline"
-                            return-object
-                            :disabled="!(firstModel && secondModel)"
-                            @input="handleThirdInput"
-                    ></v-autocomplete>
+            class="d-inline-flex elevation-23 mr-5 mb-5 pl-5 pr-2 animated"
+            :class="{flipInX : loadedOnce}"
+            style="animation-delay: 1250ms"
+            v-model="secondModel"
+            :items="secondItems"
+            :search-input.sync="secondSearch"
+            color="white"
+            hide-no-data
+            hide-selected
+            rounded
+            item-text="strSport"
+            item-value="idSport"
+            label="sports category"
+            placeholder="e.g. Soccer"
+            :prepend-icon="icon"
+            return-object
+            @input="handleSecondInput"
+            @change="loadedOnce = false; readMoreTeamDescActivated = false; thirdModel = null; team = ''; teams = []; selectedTeam = null; teamPlayers = null; selectedPlayer = null; teamEvents = null; animated = true">
+          </v-autocomplete>
+          <v-autocomplete
+            class="d-inline-flex elevation-24 pl-5 pr-2 animated"
+            :class="{flipInX : loadedOnce}"
+            style="animation-delay: 1750ms"
+            v-model="thirdModel"
+            :items="thirdItems"
+            :search-input.sync="thirdSearch"
+            color="white"
+            hide-no-data
+            hide-selected
+            rounded
+            item-text="strTeam"
+            item-value="idTeam"
+            label="team"
+            :placeholder="placeholder"
+            prepend-icon="mdi-account-group-outline"
+            return-object
+            :disabled="!(firstModel && secondModel)"
+            @input="handleThirdInput"
+            @change="loadedOnce = false; readMoreTeamDescActivated = false; selectedTeam = null; teamPlayers = null; selectedPlayer = null; teamEvents = null; animated = true">
+          </v-autocomplete>
                 </v-card-text>
                 <v-card-actions class="ma-5">
-                    <v-btn
-                            :disabled="!thirdModel"
-                            color="grey darken-3"
-                            @click="fetchApi"
-                            style="position: absolute;
-left:    25px;
-bottom:   20px;"
-                    >
-                        <v-icon right>mdi-magnify</v-icon>
-                        Search
-                    </v-btn>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                            :disabled="!(firstModel || secondModel || thirdModel)"
-                            color="grey darken-3"
-                            @click="firstModel = ''; secondModel = null; thirdModel = null"
-                            style="position: absolute;
-right:    25px;
-bottom:   20px;"
-                    >
-                        Clear
-                        <v-icon right>mdi-close-circle</v-icon>
-                    </v-btn>
-                </v-card-actions>
+          <v-btn
+            :disabled="!thirdModel"
+            color="grey darken-1"
+            @click="fetchApi"
+            class="animated"
+            :class="{pulse: thirdModel}"
+            style="position: absolute; left: 25px; bottom: 20px;">
+            <v-icon right>mdi-magnify</v-icon>
+            Search
+          </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn
+            :disabled="!(firstModel || secondModel || thirdModel)"
+            color="grey darken-1"
+            @click="loadedOnce = false; readMoreTeamDescActivated = false; firstModel = ''; secondModel = null; thirdModel = null; category = ''; team = ''; region = ''; categories = []; teams = []; countries = []; selectedTeam = null; teamPlayers = null; selectedPlayer = null; teamEvents = null; animated = true; image = require('@/assets/Soccer.jpeg'); placeholder = 'e.g. Lech Poznan'; icon = 'mdi-soccer';"
+            style="position: absolute; right: 25px; bottom: 20px;">
+            Clear
+            <v-icon right>mdi-close-circle</v-icon>
+          </v-btn>
+        </v-card-actions>
             </v-img>
         </v-card>
 
@@ -313,43 +350,77 @@ bottom:   20px;"
         name: 'App',
         data() {
             return {
-                apiKey1: '15de284d0e884be19dcf6c92c4a88205',
-                apiKey2: '4013017',
-                urlBase1: 'http://newsapi.org/v2/everything?q=',
-                urlBase2: 'https://www.thesportsdb.com/api/v1/json/',
-                clubs: null,
-                news: null,
-                show: false,
-                loading: true,
-                loaded: false,
-                count: [],
-                countries: [],
-                categories: [],
-                teams: [],
-                firstIsLoading: false,
-                secondIsLoading: false,
-                thirdIsLoading: false,
-                firstModel: null,
-                secondModel: null,
-                thirdModel: null,
-                firstSearch: null,
-                secondSearch: null,
-                thirdSearch: null,
-                region: '',
-                category: '',
-                team: '',
-                selectedTeam: null,
-                teamInfo: [{Team:'strTeam', Formed:'intFormedYear', League:'strLeague', Stadium: 'strStadium', Country: 'strCountry'}],
-                teamPlayers: null,
-                selectedPlayer: null,
-                teamEvents: null,
-                readMoreTeamDescActivated: false,
-                image: require('@/assets/soccer.jpg'),
-                isShowNews: false,
-                newsToShow: null,
-                isNewsClicked: false,
-                firstLoadOfPage: true,
-                lengthOfNewsTitle: 56,
+        apiKey1: '15de284d0e884be19dcf6c92c4a88205',
+      apiKey2: '4013017',
+      urlBase: 'https://www.thesportsdb.com/api/v1/json/',
+      selectedTeam: null,
+      news: null,
+      show: false,
+      loading: true,
+      loaded: false,
+      count: [],
+      countries: [],
+      categories: [], 
+      teams: [],
+      firstModel: null,
+      secondModel: null,
+      thirdModel: null,
+      firstSearch: null,
+      secondSearch: null,
+      thirdSearch: null,
+      region: '',
+      category: '',
+      team: '',
+      image: require('@/assets/Soccer.jpeg'),
+      icon: 'mdi-soccer',
+      icons: ['mdi-soccer', 
+      'mdi-car-sports', 
+      'mdi-boxing-glove', 
+      'mdi-baseball', 
+      'mdi-basketball',
+      'mdi-football',
+      'mdi-hockey-puck',
+      'mdi-rugby',
+      'mdi-cricket',
+      'mdi-football-australian',
+      'mdi-gamepad-square-outline',
+      'mdi-volleyball',
+      'mdi-pokeball',
+      'mdi-handball',
+      'mdi-hockey-sticks',
+      ],
+      placeholder: 'e.g. Lech Poznan',
+      placeholders: ['e.g. Lech Poznan',
+      'e.g. Orlen X-Raid Team',
+      'e.g. ACB MMA',
+      'e.g. Boston Red Sox',
+      'e.g. Basket Zielona Góra',
+      'e.g. New York Giants',
+      'e.g. Toronto Maple Leafs',
+      'e.g. Gloucester',
+      'e.g. Birmingham Bears',
+      'e.g. Collingwood Football Club',
+      'e.g. Ascension Gaming',
+      'e.g. A.E. Komotini',
+      'e.g. Melbourne Vixens',
+      'e.g. Paris Saint-Germain Handball',
+      'e.g. Rot-Weiss Köln'
+      ],
+      overlay: false,
+      alert: true,
+      teamInfo: [{Team:'strTeam', Formed:'intFormedYear', League:'strLeague', Stadium: 'strStadium', Country: 'strCountry'}],
+      teamPlayers: null,
+      selectedPlayer: null,
+      teamEvents: null,
+      readMoreTeamDescActivated: false,
+      isShowNews: false,
+      newsToShow: null,
+      isNewsClicked: false,
+      animated: true,
+      description: '',
+      loadedOnce: true,
+      firstLoadOfPage: true,
+      lengthOfNewsTitle: 56,
             }
         },
         methods: {
