@@ -137,24 +137,12 @@
             </v-img>
         </v-card>
 
-     <div class="indigo darken-1 text-center">
+           <div class="indigo darken-1 text-center">
           <v-card :elevation="24" class=" indigo darken-4 white--text col-md-8 col-sm-10 offset-md-2 offset-sm-1 my-md-10 my-5">
 
-              <div class="Team_Info_container" v-if="selectedTeam">
+              <div class="Team_Info_container" v-if="firstLoadOfPage!=true && selectedTeam">
               <img :src="selectedTeam.strTeamBanner" class="v-picker--full-width mb-5" >
-<!--             tooltip section-->
-             <div 
-             class="d-flex justify-center animated pulse"
-             :class="{infinite: animated}"
-             >
-              <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-              <v-icon size=85 color="white" @mouseover="animated = false" v-on="on">{{ icon }}</v-icon>
-              </template>
-              <span>{{ description }}</span>
-              </v-tooltip>
 
-              </div>
 <!--             team description section-->
               <div class="py-8 px-8">
                   <p v-if="!readMoreTeamDescActivated && isTeamDescToggleButton()" > {{selectedTeam.strDescriptionEN.slice(0, 435)}}...</p>
@@ -318,6 +306,7 @@
           </v-card>
       </div>
 
+
         <v-footer
                 dark
                 padless
@@ -432,6 +421,7 @@
       description: '',
       loadedOnce: true,
       lengthOfNewsTitle: 56,
+      firstLoadOfPage: true
             }
         },
   methods: {
