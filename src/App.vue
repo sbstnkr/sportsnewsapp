@@ -137,47 +137,90 @@
             </v-img>
         </v-card>
 
-      <div class="indigo darken-1 text-center">
+           <div class="indigo darken-1 text-center">
           <v-card :elevation="24" class=" indigo darken-4 white--text col-md-8 col-sm-10 offset-md-2 offset-sm-1 my-md-10 my-5">
 
-              <div class="Team_Info_container" v-if="firstLoadOfPage!=true">
+              <div class="Team_Info_container" v-if="firstLoadOfPage!=true && selectedTeam">
               <img :src="selectedTeam.strTeamBanner" class="v-picker--full-width mb-5" >
 
 <!--             team description section-->
               <div class="py-8 px-8">
-                  <p v-if="!readMoreTeamDescActivated" > {{selectedTeam.strDescriptionEN.slice(0, 435)}}...</p>
-                  <p v-if="readMoreTeamDescActivated" > {{selectedTeam.strDescriptionEN}}</p>
-                  <v-btn small color="indigo lighten-4" v-if="!readMoreTeamDescActivated  && selectedTeam.strDescriptionEN.length > 435" @click="activateMoreText">Read More</v-btn>
-                  <v-btn small color="indigo lighten-4" v-if="readMoreTeamDescActivated" @click="deactivateMoreText">Read Less</v-btn>
+                  <p v-if="!readMoreTeamDescActivated && isTeamDescToggleButton()" > {{selectedTeam.strDescriptionEN.slice(0, 435)}}...</p>
+                  <p v-else > {{selectedTeam.strDescriptionEN}}</p>
+                  <v-btn small color="indigo lighten-4" v-if="!readMoreTeamDescActivated  && isTeamDescToggleButton()" @click="activateMoreText">Read More</v-btn>
+                  <v-btn small color="indigo lighten-4" v-else-if="readMoreTeamDescActivated && isTeamDescToggleButton()" @click="deactivateMoreText">Read Less</v-btn>
               </div>
 
 <!--              team info section-->
               <v-card color="indigo darken-2 white--text" :elevation="10" class="mx-sm-8">
                   <v-row>
-                      <div class="mx-md-4 col-4 offset-md-0 offset-4">
+                      <div class="mx-sm-4 col-4 offset-sm-0 offset-4">
                           <v-img :src="selectedTeam.strTeamBadge"></v-img>
                       </div>
-                      <div class="col-md-7 ">
-                          <v-row v-for="(infoValue, infoKey) in teamInfo[0]" :key="infoKey" >
-                              <div class="col-md-4 col-6  text-right py-0">
-                                  <p class="font-weight-black"> {{infoKey}} : </p>
-                              </div>
-                              <div class="col-md-8 col-6 text-left py-0">
-                                  <p> {{selectedTeam[infoValue]}} </p>
-                              </div>
-                          </v-row>
+                      <div class="col-sm-7">
+                          <div v-for="(infoValue, infoKey) in teamInfo[0]" :key="infoKey" >
+                              <v-row v-if="selectedTeam[infoValue].length > 0 && selectedTeam[infoValue] !== '0'">
+                                  <div class="col-md-4 col-sm-5 col-6 text-right py-0">
+                                      <p class="font-weight-black"> {{infoKey}} : </p>
+                                  </div>
+                                  <div class="col-md-8 col-sm-7 col-6 text-left py-0">
+                                      <p> {{selectedTeam[infoValue]}} </p>
+                                  </div>
+                              </v-row>
+                          </div>
                       </div>
                   </v-row>
               </v-card>
 
-<!--              team players section-->
-              <v-card class="text-left mx-sm-8 my-10" :elevation="10">
+              <!--              team players section-->
+              <v-card v-if="teamPlayers" class="text-left mx-sm-8 pa-0 my-10" :elevation="10">
                   <v-card-title class="indigo darken-2 white--text headline">
                       Players
                   </v-card-title>
                   <v-row class="pa-4" justify="space-between">
-                      <div class="col-sm-12 col-md-6 col-lg-5 pr-0">
-                          <v-list class="overflow-y-auto" max-height="500" three-line>
+
+                      <div class="col-12 col-md-6 text-center pl-0">
+                          <div v-if="!selectedPlayer" class="title grey--text text--lighten-1 font-weight-light" style="align-self: center;">
+                              Select a User
+                          </div>
+                          <v-card v-else :key="selectedPlayer.id" flat>
+                              <v-card-text>
+                                  <v-avatar size="100">
+                                      <v-img :src="selectedPlayer.strCutout" class="mb-6"></v-img>
+                                  </v-avatar>
+                                  <h3 class="headline mb-2">
+                                      {{ selectedPlayer.strPlayer }}
+                                  </h3>
+                              </v-card-text>
+                              <v-divider></v-divider>
+                              <div class="my-5">
+                                  <v-row v-if="selectedPlayer.dateBorn.length > 0" class="pa-0">
+                                      <div class="offset-1 offset-md-0 col-5  pa-0 text-right font-regular mr-4 mb-2" tag="strong" cols="6">Date Born:</div>
+                                      <div class="col-5 pa-0 text-left font-weight-light">{{selectedPlayer.dateBorn}}</div>
+                                  </v-row>
+                                  <v-row v-if="selectedPlayer.strNationality.length > 0" class="pa-0">
+                                      <div class="offset-1 offset-md-0 col-5  pa-0 text-right  font-regular mr-4 mb-2" tag="strong" cols="6">Nationality:</div>
+                                      <div class="col-5 pa-0 text-left font-weight-light">{{ selectedPlayer.strNationality }}</div>
+                                  </v-row>
+                                  <v-row v-if="selectedPlayer.strNumber.length > 0" class="pa-0">
+                                      <div class="offset-1  offset-md-0 col-5 pa-0 text-right font-regular mr-4 mb-2" tag="strong" cols="6">Number:</div>
+                                      <div class="col-5  pa-0 text-left font-weight-light">{{ selectedPlayer.strNumber }}</div>
+                                  </v-row>
+                                  <v-row v-if="selectedPlayer.strPosition.length > 0" class="pa-0">
+                                      <div class="offset-1 offset-md-0 col-5 pa-0 text-right font-regular mr-4 mb-2" tag="strong" cols="6">Position:</div>
+                                      <div class="col-5 pa-0 text-left font-weight-light">{{ selectedPlayer.strPosition }}</div>
+                                  </v-row>
+                                  <v-row class="justify-center">
+                                      <a v-if="selectedPlayer.strFacebook" target="_blank" v-bind:href="'http://' + selectedPlayer.strFacebook"><i class="fab fa-facebook-square fa-2x social-icons" style="color: #153bd4"></i></a>
+                                      <a v-if="selectedPlayer.strTwitter" target="_blank" v-bind:href="'http://' + selectedPlayer.strTwitter"><i class="fab fa-twitter-square fa-2x social-icons" style="color: #3ca5cf"></i></a>
+                                      <a v-if="selectedPlayer.strInstagram" target="_blank" v-bind:href="'http://' + selectedPlayer.strInstagram"><i class="fab fa-instagram-square fa-2x social-icons" style="color: #bd31d6"></i></a>
+                                      <a v-if="selectedPlayer.strYoutube" target="_blank" v-bind:href="'http://' + selectedPlayer.strYoutube"><i class="fab fa-youtube fa-2x social-icons" style="color: red"></i></a>
+                                  </v-row>
+                              </div>
+                          </v-card>
+                      </div>
+                      <div class="col-12 col-md-5 pr-0">
+                          <v-list class="overflow-y-auto" max-height="400" three-line>
                               <template v-for="player in teamPlayers" >
                                   <v-list-item @click="setSelectedPlayer(player)" :key="player.strTeam">
                                       <v-list-item-avatar>
@@ -189,52 +232,11 @@
                               </template>
                           </v-list>
                       </div>
-
-                      <div class="col-lg-6 col-md-5 col-12 text-center pl-0">
-                              <div v-if="!selectedPlayer" class="title grey--text text--lighten-1 font-weight-light" style="align-self: center;">
-                                  Select a User
-                              </div>
-                              <v-card v-else :key="selectedPlayer.id" class="my-10" flat>
-                                  <v-card-text>
-                                      <v-avatar size="100">
-                                          <v-img :src="selectedPlayer.strCutout" class="mb-6"></v-img>
-                                      </v-avatar>
-                                      <h3 class="headline mb-2">
-                                          {{ selectedPlayer.strPlayer }}
-                                      </h3>
-                                  </v-card-text>
-                                  <v-divider></v-divider>
-                                  <div class="my-5">
-                                      <v-row class="pa-0">
-                                          <div class="offset-1 offset-md-0 col-5  pa-0 text-right font-regular mr-4 mb-2" tag="strong" cols="6">Date Born:</div>
-                                          <div class="col-5 pa-0 text-left font-weight-light">{{selectedPlayer.dateBorn}}</div>
-                                      </v-row>
-                                      <v-row class="pa-0">
-                                          <div class="offset-1 offset-md-0 col-5  pa-0 text-right  font-regular mr-4 mb-2" tag="strong" cols="6">Nationality:</div>
-                                          <div class="col-5 pa-0 text-left font-weight-light">{{ selectedPlayer.strNationality }}</div>
-                                      </v-row>
-                                      <v-row class="pa-0">
-                                          <div class="offset-1  offset-md-0 col-5 pa-0 text-right font-regular mr-4 mb-2" tag="strong" cols="6">Number:</div>
-                                          <div class="col-5  pa-0 text-left font-weight-light">{{ selectedPlayer.strNumber }}</div>
-                                      </v-row>
-                                      <v-row class="pa-0">
-                                          <div class="offset-1 offset-md-0 col-5 pa-0 text-right font-regular mr-4 mb-2" tag="strong" cols="6">Position:</div>
-                                          <div class="col-5 pa-0 text-left font-weight-light">{{ selectedPlayer.strPosition }}</div>
-                                      </v-row>
-                                      <v-row class="col-md-10 offset-md-1 mx-3">
-                                          <a v-if="selectedPlayer.strFacebook" target="_blank" v-bind:href="'http://' + selectedPlayer.strFacebook"><i class="fab fa-facebook-square fa-2x social-icons" style="color: #153bd4"></i></a>
-                                          <a v-if="selectedPlayer.strTwitter" target="_blank" v-bind:href="'http://' + selectedPlayer.strTwitter"><i class="fab fa-twitter-square fa-2x social-icons" style="color: #3ca5cf"></i></a>
-                                          <a v-if="selectedPlayer.strInstagram" target="_blank" v-bind:href="'http://' + selectedPlayer.strInstagram"><i class="fab fa-instagram-square fa-2x social-icons" style="color: #bd31d6"></i></a>
-                                          <a v-if="selectedPlayer.strYoutube" target="_blank" v-bind:href="'http://' + selectedPlayer.strYoutube"><i class="fab fa-youtube fa-2x social-icons" style="color: red"></i></a>
-                                      </v-row>
-                                  </div>
-                              </v-card>
-                      </div>
                   </v-row>
               </v-card>
 
-<!--              team events section-->
-              <v-card class="col-md-6 offset-md-3 pa-0 " :elevation="10">
+              <!--              team events section-->
+              <v-card v-if="teamEvents" class="col-sm-8 offset-sm-2 pa-0 " :elevation="10">
                   <v-toolbar class="indigo darken-2" dark>
                       <v-toolbar-title>Coming Events</v-toolbar-title>
                   </v-toolbar>
@@ -350,323 +352,296 @@
         name: 'App',
         data() {
             return {
-        apiKey1: '15de284d0e884be19dcf6c92c4a88205',
-      apiKey2: '4013017',
-      urlBase: 'https://www.thesportsdb.com/api/v1/json/',
-      selectedTeam: null,
-      news: null,
-      show: false,
-      loading: true,
-      loaded: false,
-      count: [],
-      countries: [],
-      categories: [], 
-      teams: [],
-      firstModel: null,
-      secondModel: null,
-      thirdModel: null,
-      firstSearch: null,
-      secondSearch: null,
-      thirdSearch: null,
-      region: '',
-      category: '',
-      team: '',
-      image: require('@/assets/Soccer.jpeg'),
-      icon: 'mdi-soccer',
-      icons: ['mdi-soccer', 
-      'mdi-car-sports', 
-      'mdi-boxing-glove', 
-      'mdi-baseball', 
-      'mdi-basketball',
-      'mdi-football',
-      'mdi-hockey-puck',
-      'mdi-rugby',
-      'mdi-cricket',
-      'mdi-football-australian',
-      'mdi-gamepad-square-outline',
-      'mdi-volleyball',
-      'mdi-pokeball',
-      'mdi-handball',
-      'mdi-hockey-sticks',
-      ],
-      placeholder: 'e.g. Lech Poznan',
-      placeholders: ['e.g. Lech Poznan',
-      'e.g. Orlen X-Raid Team',
-      'e.g. ACB MMA',
-      'e.g. Boston Red Sox',
-      'e.g. Basket Zielona Góra',
-      'e.g. New York Giants',
-      'e.g. Toronto Maple Leafs',
-      'e.g. Gloucester',
-      'e.g. Birmingham Bears',
-      'e.g. Collingwood Football Club',
-      'e.g. Ascension Gaming',
-      'e.g. A.E. Komotini',
-      'e.g. Melbourne Vixens',
-      'e.g. Paris Saint-Germain Handball',
-      'e.g. Rot-Weiss Köln'
-      ],
-      overlay: false,
-      alert: true,
-      teamInfo: [{Team:'strTeam', Formed:'intFormedYear', League:'strLeague', Stadium: 'strStadium', Country: 'strCountry'}],
-      teamPlayers: null,
-      selectedPlayer: null,
-      teamEvents: null,
-      readMoreTeamDescActivated: false,
-      isShowNews: false,
-      newsToShow: null,
-      isNewsClicked: false,
-      animated: true,
-      description: '',
-      loadedOnce: true,
-      firstLoadOfPage: true,
-      lengthOfNewsTitle: 56,
+              apiKey1: '15de284d0e884be19dcf6c92c4a88205',
+              apiKey2: '4013017',
+              urlBase: 'https://www.thesportsdb.com/api/v1/json/',
+              news: null,
+              show: false,
+              count: [],
+              countries: [],
+              categories: [], 
+              teams: [],
+              firstModel: null,
+              secondModel: null,
+              thirdModel: null,
+              firstSearch: null,
+              secondSearch: null,
+              thirdSearch: null,
+              region: '',
+              category: '',
+              team: '',
+              selectedTeam: null,
+              teamInfo: [{Team:'strTeam', Formed:'intFormedYear', League:'strLeague', Stadium: 'strStadium', Country: 'strCountry'}],
+              teamDescToggleButton: false,
+              teamPlayers: null,
+              selectedPlayer: null,
+              teamEvents: null,
+              readMoreTeamDescActivated: false,
+              image: require('@/assets/Soccer.jpeg'),
+              icon: 'mdi-soccer',
+              icons: ['mdi-soccer', 
+              'mdi-car-sports', 
+              'mdi-boxing-glove', 
+              'mdi-baseball', 
+              'mdi-basketball',
+              'mdi-football',
+              'mdi-hockey-puck',
+              'mdi-rugby',
+              'mdi-cricket',
+              'mdi-football-australian',
+              'mdi-gamepad-square-outline',
+              'mdi-volleyball',
+              'mdi-pokeball',
+              'mdi-handball',
+              'mdi-hockey-sticks',
+              ],
+              placeholder: 'e.g. Lech Poznan',
+              placeholders: ['e.g. Lech Poznan',
+              'e.g. Orlen X-Raid Team',
+              'e.g. ACB MMA',
+              'e.g. Boston Red Sox',
+              'e.g. Basket Zielona Góra',
+              'e.g. New York Giants',
+              'e.g. Toronto Maple Leafs',
+              'e.g. Gloucester',
+              'e.g. Birmingham Bears',
+              'e.g. Collingwood Football Club',
+              'e.g. Ascension Gaming',
+              'e.g. A.E. Komotini',
+              'e.g. Melbourne Vixens',
+              'e.g. Paris Saint-Germain Handball',
+              'e.g. Rot-Weiss Köln'
+              ],
+              isShowNews: false,
+              newsToShow: null,
+              isNewsClicked: false,
+              firstLoadOfPage: true,
+              lengthOfNewsTitle: 56,
+              overlay: false,
+              alert: true,
+              animated: true,
+              description: '',
+              loadedOnce: true
             }
         },
-        methods: {
-            fetchApi() {
-                axios.all([
-                    axios.get(`${this.urlBase2}${this.apiKey2}/searchteams.php?t=${this.team}`)
+  methods: {
+    fetchApi() {
+      axios.all([
+        axios.get(`${this.urlBase}${this.apiKey2}/searchteams.php?t=${this.team}`),
+        axios.get(`${this.urlBase}${this.apiKey2}/searchplayers.php?t=${this.team}`)
                 ])
-                    .then(response => (
-                        this.clubs = response[1]
-                    ));
-                console.log(this.news),
-                console.log(this.clubs),
-                this.firstLoadOfPage=false;
-            },
-            handleFirstInput(value) {
-                this.region = value.country;
-            },
-            handleSecondInput(value) {
-                this.category = value.strSport;
-            },
-            handleThirdInput(value) {
-                this.team = value.strTeam;
-            },
-            activateMoreText() {
-                this.readMoreTeamDescActivated = true;
-            },
-            deactivateMoreText() {
-                this.readMoreTeamDescActivated = false;
-            },
-            setSelectedPlayer(player) {
-                this.selectedPlayer = player;
-            },
-            newsClicked(news) {
-                this.isShowNews = true;
-                this.newsToShow = news;
-                this.isNewsClicked = true;
-            }
-        },
-        filters: {
-            regExp(string) {
-                return string.replace(/\[.*?\]/g, '').replace(/<\/?[^>]+(>|$)/g, '');
-
-            },
-            slice(string) {
-                let strings = string.split("T")
-
-                return strings[0].concat(" ", strings[1].slice(0, -1))
-
-            }
-        },
-        created() {
-            const readyHandler = () => {
-                if (document.readyState == 'complete') {
-                    this.loading = false;
-                    this.loaded = true;
-                    document.removeEventListener('readystatechange', readyHandler);
-                }
-            };
-
-            axios.get(`https://www.thesportsdb.com/api/v1/json/1/searchteams.php?t=Arsenal`)
+          .then(response => (
+            this.selectedTeam = response[0].data.teams[0],
+            console.log(this.selectedTeam),
+            this.teamPlayers = response[1].data.player,
+            axios.get(`${this.urlBase}${this.apiKey2}/eventsnext.php?id=${this.selectedTeam.idTeam}`)
                 .then(response => {
-                    // JSON responses are automatically parsed.
-                    this.selectedTeam = response.data.teams[0];
-                    console.log(this.selectedTeam);
-                });
-
-            axios.get(`https://www.thesportsdb.com/api/v1/json/4013017/searchplayers.php?t=Arsenal`)
-                .then(response => {
-                    // JSON responses are automatically parsed.
-                    this.teamPlayers = response.data.player;
-                    console.log(this.teamPlayers);
-                });
-
-            axios.get(`https://www.thesportsdb.com/api/v1/json/1/eventsnext.php?id=133604`)
-                .then(response => {
-                    // JSON responses are automatically parsed.
                     this.teamEvents = response.data.events;
-                    console.log(this.teamEvents);
-                });
-
-            axios.get(`http://newsapi.org/v2/top-headlines?country=pl&category=sports&apiKey=${this.apiKey1}`)
+                })
+));
+this.firstLoadOfPage=false;
+      },
+    handleFirstInput (value) {
+      this.region = value.country;
+      },
+    handleSecondInput (value) {
+      this.category = value.strSport;
+      this.description = value.strSportDescription
+      var i;
+      for (i = 0; i < this.categories.length; i++) {
+        if (this.category == `${this.categories[i].strSport}`) {
+          this.image = require(`@/assets/${this.categories[i].strSport}.jpeg`);
+          this.icon = this.icons[i]
+          this.placeholder = this.placeholders[i]
+          }}},
+    handleThirdInput (value) {
+      this.team = value.strTeam;
+      console.log(this.team)
+      },
+    activateMoreText() {
+        this.readMoreTeamDescActivated = true;
+    },
+    deactivateMoreText() {
+        this.readMoreTeamDescActivated = false;
+    },
+    setSelectedPlayer(player) {
+        this.selectedPlayer = player;
+    },
+    newsClicked(news) {
+        this.isShowNews = true;
+        this.newsToShow = news;
+        this.isNewsClicked = true;
+    },
+    isTeamDescToggleButton()
+            {
+                return this.selectedTeam.strDescriptionEN.length > 435 ? true : false;
+            }
+  },
+  filters: {
+    regExp(string) {
+        return string.replace(/\[.*?\]/g, '').replace(/<\/?[^>]+(>|$)/g, '');
+    }
+},
+created() {
+  axios.get(`https://newsapi.org/v2/top-headlines?country=gb&category=sports&apiKey=${this.apiKey1}`)
                 .then(response => {
-                    // JSON responses are automatically parsed.
                     this.news = response.data.articles;
-                    console.log(this.news);
-                });
+                    for (var i = 0; i < this.news.length; i++)
+                if (this.news[i].urlToImage == null) {
+                this.news.splice(i,1);
+                }});
+},
+  computed: {
+    firstFields () {
+        if (!this.firstModel) return []
 
-            document.addEventListener('readystatechange', readyHandler);
+        return Object.keys(this.firstModel).map(key => {
+          return {
+            key,
+            value: this.firstModel[key] || 'n/a',
+          }
+        })
+      },
+      secondFields () {
+        if (!this.secondModel) return []
 
-            readyHandler(); // in case the component has been instantiated lately after loading
+        return Object.keys(this.secondModel).map(key => {
+          return {
+            key,
+            value: this.secondModel[key] || 'n/a',
+          }
+        })
+      },
+      thirdFields () {
+        if (!this.thirdModel) return []
+      
+        return Object.keys(this.thirdModel).map(key => {
+          return {
+            key,
+            value: this.thirdModel[key] || 'n/a',
+          }
+        })
+      },
+      firstItems () {
+        return this.countries.map(region => {
+          const country = region.country.replace('-', ' ').replace(' DR', '')
 
-        },
-        computed: {
-            firstFields() {
-                if (!this.firstModel) return []
+          return Object.assign({}, region, { country })
+        })
+      },
+      secondItems () {
+        return this.categories.map(category => {
+          const strSport = category.strSport
 
-                return Object.keys(this.firstModel).map(key => {
-                    return {
-                        key,
-                        value: this.firstModel[key] || 'n/a',
-                    }
-                })
-            },
-            secondFields() {
-                if (!this.secondModel) return []
+          return Object.assign({}, category, { strSport })
+        })
+      },
+      thirdItems () {
+        return this.teams.map(team => {
+          const strTeam = team.strTeam
+          return Object.assign({}, team, { strTeam })
+        })
+        
+      }
+  },
+  watch: {
+      firstSearch () {
+        if (this.firstItems.length > 0) return
 
-                return Object.keys(this.secondModel).map(key => {
-                    return {
-                        key,
-                        value: this.secondModel[key] || 'n/a',
-                    }
-                })
-            },
-            thirdFields() {
-                if (!this.thirdModel) return []
+        fetch("https://api-football-v1.p.rapidapi.com/v2/countries", {
+              "method": "GET",
+              "headers": {
+                "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
+                "x-rapidapi-key": "54aa1af517msh325e94573cd5588p194beejsn32fe5fe630c3"
+              }
+            })
+          .then(res => res.json())
+          .then(res => {
+            const { results, countries } = res.api
+            this.count = results
+            this.countries = countries
+            let keys = Object.keys(this.countries)
+            let indexes = [6, 9, 12, 16, 17, 18, 21, 24, 42, 44, 50, 52, 64, 76, 83, 92, 99, 126]
+            for (var index of indexes) {
+            delete this.countries[keys[index]]}
+            this.countries = this.countries.filter(function() { return true; })
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
+      secondSearch () {
+        if (this.secondItems.length > 0) return
 
-                return Object.keys(this.thirdModel).map(key => {
-                    return {
-                        key,
-                        value: this.thirdModel[key] || 'n/a',
-                    }
-                })
-            },
-            firstItems() {
-                return this.countries.map(region => {
-                    const country = region.country
+        fetch('https://www.thesportsdb.com/api/v1/json/1/all_sports.php')
+          .then(res => res.json())
+          .then(res => {
+            const { sports } = res
+            this.categories = sports
+            let keys = Object.keys(this.categories)
+            let indexes = [7, 9, 11, 17, 19]
+            for (var index of indexes) {
+            delete this.categories[keys[index]]}
+            this.categories = this.categories.filter(function() { return true; })
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
+      thirdSearch () {
+        if (this.thirdItems.length > 0) return
 
-                    return Object.assign({}, region, {country})
-                })
-            },
-            secondItems() {
-                return this.categories.map(category => {
-                    const strSport = category.strSport
-
-                    return Object.assign({}, category, {strSport})
-                })
-            },
-            thirdItems() {
-                return this.teams.map(team => {
-                    const strTeam = team.strTeam
-
-                    return Object.assign({}, team, {strTeam})
-                })
-            },
-        },
-        watch: {
-            firstSearch() {
-                // Items have already been loaded
-                if (this.firstItems.length > 0) return
-
-                // Items have already been requested
-                if (this.firstIsLoading) return
-
-                this.firstIsLoading = true
-
-                // Lazily load input items
-                fetch("https://api-football-v1.p.rapidapi.com/v2/countries", {
-                    "method": "GET",
-                    "headers": {
-                        "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
-                        "x-rapidapi-key": "54aa1af517msh325e94573cd5588p194beejsn32fe5fe630c3"
-                    }
-                })
-                    .then(res => res.json())
-                    .then(res => {
-                        const {results, countries} = res.api
-                        this.count = results
-                        this.countries = countries
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-                    .finally(() => (this.firstIsLoading = false))
-            },
-            secondSearch() {
-                // Items have already been loaded
-                if (this.secondItems.length > 0) return
-
-                // Items have already been requested
-                if (this.secondIsLoading) return
-
-                this.secondIsLoading = true
-
-                // Lazily load input items
-                fetch('https://www.thesportsdb.com/api/v1/json/1/all_sports.php')
-                    .then(res => res.json())
-                    .then(res => {
-                        const {sports} = res
-                        this.categories = sports
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-                    .finally(() => (this.secondIsLoading = false))
-            },
-            thirdSearch() {
-                // Items have already been loaded
-                if (this.thirdItems.length > 0) return
-
-                // Items have already been requested
-                if (this.thirdIsLoading) return
-
-                this.thirdIsLoading = true
-
-                if (this.category != '' && this.region != '') {
-                    fetch(`https://www.thesportsdb.com/api/v1/json/1/search_all_teams.php?s=${this.category}&c=${this.region}`)
-                        .then(res => res.json())
-                        .then(res => {
-                            const {teams} = res
-                            this.teams = teams
-                        })
-                        .catch(err => {
-                            console.log(err)
-                        })
-                        .finally(() => (this.thirdIsLoading = false))
+        if (this.category != '' && this.region != '') {
+          fetch(`https://www.thesportsdb.com/api/v1/json/1/search_all_teams.php?s=${this.category}&c=${this.region}`)
+            .then(res => res.json())
+            .then(res => {
+              if (res.teams != null) {
+              const { teams } = res
+              this.teams = teams
+              for (var i = 0; i < this.teams.length; i++)
+                if (this.teams[i].strTeam.startsWith('_')) {
+                this.teams.splice(i,1);
+                if (this.teams.length == 0) {
+                  this.overlay = true
+                  this.thirdSearch = null
                 }
-
-            },
-        },
-    };
+                }
+              }
+              else {this.overlay = true
+              this.thirdSearch = null
+              
+              }
+            })
+            .catch(err => {
+              console.log(err)
+            });
+            }
+      },
+    },
+};
 </script>
 
 <style scoped>
+
     .shadow {
         -webkit-filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .7));
         filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .7));
         /* Similar syntax to box-shadow */
     }
-
     .shadow2 {
         -webkit-filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .3));
         filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .3));
         /* Similar syntax to box-shadow */
-
     }
-
     .social-icons {
         margin: 15px;
     }
-
     .fade-enter-active, .fade-leave-active {
         transition: opacity .5s;
     }
-
     .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
     {
         opacity: 0;
     }
+
 </style>
