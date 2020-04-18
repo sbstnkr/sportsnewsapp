@@ -423,250 +423,232 @@
       lengthOfNewsTitle: 56,
             }
         },
-        methods: {
-            fetchApi() {
-                axios.all([
-                    axios.get(`${this.urlBase2}${this.apiKey2}/searchteams.php?t=${this.team}`)
+  methods: {
+    fetchApi() {
+      axios.all([
+        axios.get(`${this.urlBase}${this.apiKey2}/searchteams.php?t=${this.team}`),
+        axios.get(`${this.urlBase}${this.apiKey2}/searchplayers.php?t=${this.team}`)
                 ])
-                    .then(response => (
-                        this.clubs = response[1]
-                    ));
-                console.log(this.news),
-                console.log(this.clubs),
-                this.firstLoadOfPage=false;
-            },
-            handleFirstInput(value) {
-                this.region = value.country;
-            },
-            handleSecondInput(value) {
-                this.category = value.strSport;
-            },
-            handleThirdInput(value) {
-                this.team = value.strTeam;
-            },
-            activateMoreText() {
-                this.readMoreTeamDescActivated = true;
-            },
-            deactivateMoreText() {
-                this.readMoreTeamDescActivated = false;
-            },
-            setSelectedPlayer(player) {
-                this.selectedPlayer = player;
-            },
-            newsClicked(news) {
-                this.isShowNews = true;
-                this.newsToShow = news;
-                this.isNewsClicked = true;
-            }
-        },
-        filters: {
-            regExp(string) {
-                return string.replace(/\[.*?\]/g, '').replace(/<\/?[^>]+(>|$)/g, '');
-
-            },
-            slice(string) {
-                let strings = string.split("T")
-
-                return strings[0].concat(" ", strings[1].slice(0, -1))
-
-            }
-        },
-        created() {
-            const readyHandler = () => {
-                if (document.readyState == 'complete') {
-                    this.loading = false;
-                    this.loaded = true;
-                    document.removeEventListener('readystatechange', readyHandler);
-                }
-            };
-
-            axios.get(`https://www.thesportsdb.com/api/v1/json/1/searchteams.php?t=Arsenal`)
+          .then(response => (
+            this.selectedTeam = response[0].data.teams[0],
+            console.log(this.selectedTeam),
+            this.teamPlayers = response[1].data.player,
+            axios.get(`${this.urlBase}${this.apiKey2}/eventsnext.php?id=${this.selectedTeam.idTeam}`)
                 .then(response => {
-                    // JSON responses are automatically parsed.
-                    this.selectedTeam = response.data.teams[0];
-                    console.log(this.selectedTeam);
-                });
-
-            axios.get(`https://www.thesportsdb.com/api/v1/json/4013017/searchplayers.php?t=Arsenal`)
-                .then(response => {
-                    // JSON responses are automatically parsed.
-                    this.teamPlayers = response.data.player;
-                    console.log(this.teamPlayers);
-                });
-
-            axios.get(`https://www.thesportsdb.com/api/v1/json/1/eventsnext.php?id=133604`)
-                .then(response => {
-                    // JSON responses are automatically parsed.
                     this.teamEvents = response.data.events;
-                    console.log(this.teamEvents);
-                });
-
-            axios.get(`http://newsapi.org/v2/top-headlines?country=pl&category=sports&apiKey=${this.apiKey1}`)
+                })
+                    ));
+        
+      },
+    handleFirstInput (value) {
+      this.region = value.country;
+      },
+    handleSecondInput (value) {
+      this.category = value.strSport;
+      this.description = value.strSportDescription
+      var i;
+      for (i = 0; i < this.categories.length; i++) {
+        if (this.category == `${this.categories[i].strSport}`) {
+          this.image = require(`@/assets/${this.categories[i].strSport}.jpeg`);
+          this.icon = this.icons[i]
+          this.placeholder = this.placeholders[i]
+          }}},
+    handleThirdInput (value) {
+      this.team = value.strTeam;
+      console.log(this.team)
+      },
+    activateMoreText() {
+        this.readMoreTeamDescActivated = true;
+    },
+    deactivateMoreText() {
+        this.readMoreTeamDescActivated = false;
+    },
+    setSelectedPlayer(player) {
+        this.selectedPlayer = player;
+    },
+    showNews(news) {
+        this.isShowNews = true;
+        this.newsToShow = news;
+    },
+    hideNews() {
+        if (this.isNewsClicked == false) {
+            this.isShowNews = false;
+        }
+    },
+    newsClicked(news) {
+        this.isShowNews = true;
+        this.newsToShow = news;
+        this.isNewsClicked = true;
+    }
+  },
+  filters: {
+    regExp(string) {
+        return string.replace(/\[.*?\]/g, '').replace(/<\/?[^>]+(>|$)/g, '');
+    }
+},
+created() {
+  axios.get(`https://newsapi.org/v2/top-headlines?country=gb&category=sports&apiKey=${this.apiKey1}`)
                 .then(response => {
-                    // JSON responses are automatically parsed.
                     this.news = response.data.articles;
-                    console.log(this.news);
-                });
+                    for (var i = 0; i < this.news.length; i++)
+                if (this.news[i].urlToImage == null) {
+                this.news.splice(i,1);
+                }});
+},
+  computed: {
+    firstFields () {
+        if (!this.firstModel) return []
 
-            document.addEventListener('readystatechange', readyHandler);
+        return Object.keys(this.firstModel).map(key => {
+          return {
+            key,
+            value: this.firstModel[key] || 'n/a',
+          }
+        })
+      },
+      secondFields () {
+        if (!this.secondModel) return []
 
-            readyHandler(); // in case the component has been instantiated lately after loading
+        return Object.keys(this.secondModel).map(key => {
+          return {
+            key,
+            value: this.secondModel[key] || 'n/a',
+          }
+        })
+      },
+      thirdFields () {
+        if (!this.thirdModel) return []
+      
+        return Object.keys(this.thirdModel).map(key => {
+          return {
+            key,
+            value: this.thirdModel[key] || 'n/a',
+          }
+        })
+      },
+      firstItems () {
+        return this.countries.map(region => {
+          const country = region.country.replace('-', ' ').replace(' DR', '')
 
-        },
-        computed: {
-            firstFields() {
-                if (!this.firstModel) return []
+          return Object.assign({}, region, { country })
+        })
+      },
+      secondItems () {
+        return this.categories.map(category => {
+          const strSport = category.strSport
 
-                return Object.keys(this.firstModel).map(key => {
-                    return {
-                        key,
-                        value: this.firstModel[key] || 'n/a',
-                    }
-                })
-            },
-            secondFields() {
-                if (!this.secondModel) return []
+          return Object.assign({}, category, { strSport })
+        })
+      },
+      thirdItems () {
+        return this.teams.map(team => {
+          const strTeam = team.strTeam
+          return Object.assign({}, team, { strTeam })
+        })
+        
+      }
+  },
+  watch: {
+      firstSearch () {
+        if (this.firstItems.length > 0) return
 
-                return Object.keys(this.secondModel).map(key => {
-                    return {
-                        key,
-                        value: this.secondModel[key] || 'n/a',
-                    }
-                })
-            },
-            thirdFields() {
-                if (!this.thirdModel) return []
+        fetch("https://api-football-v1.p.rapidapi.com/v2/countries", {
+              "method": "GET",
+              "headers": {
+                "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
+                "x-rapidapi-key": "54aa1af517msh325e94573cd5588p194beejsn32fe5fe630c3"
+              }
+            })
+          .then(res => res.json())
+          .then(res => {
+            const { results, countries } = res.api
+            this.count = results
+            this.countries = countries
+            let keys = Object.keys(this.countries)
+            let indexes = [6, 9, 12, 16, 17, 18, 21, 24, 42, 44, 50, 52, 64, 76, 83, 92, 99, 126]
+            for (var index of indexes) {
+            delete this.countries[keys[index]]}
+            this.countries = this.countries.filter(function() { return true; })
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
+      secondSearch () {
+        if (this.secondItems.length > 0) return
 
-                return Object.keys(this.thirdModel).map(key => {
-                    return {
-                        key,
-                        value: this.thirdModel[key] || 'n/a',
-                    }
-                })
-            },
-            firstItems() {
-                return this.countries.map(region => {
-                    const country = region.country
+        fetch('https://www.thesportsdb.com/api/v1/json/1/all_sports.php')
+          .then(res => res.json())
+          .then(res => {
+            const { sports } = res
+            this.categories = sports
+            let keys = Object.keys(this.categories)
+            let indexes = [7, 9, 11, 17, 19]
+            for (var index of indexes) {
+            delete this.categories[keys[index]]}
+            this.categories = this.categories.filter(function() { return true; })
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
+      thirdSearch () {
+        if (this.thirdItems.length > 0) return
 
-                    return Object.assign({}, region, {country})
-                })
-            },
-            secondItems() {
-                return this.categories.map(category => {
-                    const strSport = category.strSport
-
-                    return Object.assign({}, category, {strSport})
-                })
-            },
-            thirdItems() {
-                return this.teams.map(team => {
-                    const strTeam = team.strTeam
-
-                    return Object.assign({}, team, {strTeam})
-                })
-            },
-        },
-        watch: {
-            firstSearch() {
-                // Items have already been loaded
-                if (this.firstItems.length > 0) return
-
-                // Items have already been requested
-                if (this.firstIsLoading) return
-
-                this.firstIsLoading = true
-
-                // Lazily load input items
-                fetch("https://api-football-v1.p.rapidapi.com/v2/countries", {
-                    "method": "GET",
-                    "headers": {
-                        "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
-                        "x-rapidapi-key": "54aa1af517msh325e94573cd5588p194beejsn32fe5fe630c3"
-                    }
-                })
-                    .then(res => res.json())
-                    .then(res => {
-                        const {results, countries} = res.api
-                        this.count = results
-                        this.countries = countries
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-                    .finally(() => (this.firstIsLoading = false))
-            },
-            secondSearch() {
-                // Items have already been loaded
-                if (this.secondItems.length > 0) return
-
-                // Items have already been requested
-                if (this.secondIsLoading) return
-
-                this.secondIsLoading = true
-
-                // Lazily load input items
-                fetch('https://www.thesportsdb.com/api/v1/json/1/all_sports.php')
-                    .then(res => res.json())
-                    .then(res => {
-                        const {sports} = res
-                        this.categories = sports
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-                    .finally(() => (this.secondIsLoading = false))
-            },
-            thirdSearch() {
-                // Items have already been loaded
-                if (this.thirdItems.length > 0) return
-
-                // Items have already been requested
-                if (this.thirdIsLoading) return
-
-                this.thirdIsLoading = true
-
-                if (this.category != '' && this.region != '') {
-                    fetch(`https://www.thesportsdb.com/api/v1/json/1/search_all_teams.php?s=${this.category}&c=${this.region}`)
-                        .then(res => res.json())
-                        .then(res => {
-                            const {teams} = res
-                            this.teams = teams
-                        })
-                        .catch(err => {
-                            console.log(err)
-                        })
-                        .finally(() => (this.thirdIsLoading = false))
+        if (this.category != '' && this.region != '') {
+          fetch(`https://www.thesportsdb.com/api/v1/json/1/search_all_teams.php?s=${this.category}&c=${this.region}`)
+            .then(res => res.json())
+            .then(res => {
+              if (res.teams != null) {
+              const { teams } = res
+              this.teams = teams
+              for (var i = 0; i < this.teams.length; i++)
+                if (this.teams[i].strTeam.startsWith('_')) {
+                this.teams.splice(i,1);
+                if (this.teams.length == 0) {
+                  this.overlay = true
+                  this.thirdSearch = null
                 }
-
-            },
-        },
-    };
+                }
+              }
+              else {this.overlay = true
+              this.thirdSearch = null
+              
+              }
+            })
+            .catch(err => {
+              console.log(err)
+            });
+            }
+      },
+    },
+};
 </script>
 
 <style scoped>
-    .shadow {
-        -webkit-filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .7));
-        filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .7));
-        /* Similar syntax to box-shadow */
-    }
 
-    .shadow2 {
-        -webkit-filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .3));
-        filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .3));
-        /* Similar syntax to box-shadow */
-
-    }
-
-    .social-icons {
+.social-icons {
         margin: 15px;
     }
 
-    .fade-enter-active, .fade-leave-active {
-        transition: opacity .5s;
-    }
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 
-    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
-    {
-        opacity: 0;
-    }
+.carousel__item {
+  filter: brightness(60%)
+}
+
+#logo {
+  -webkit-filter: drop-shadow( 3px 3px 7.5px rgba(0, 0, 0, .7));
+  filter: drop-shadow( 3px 3px 7.5px rgba(0, 0, 0, .7));
+}
+
+#banner {
+  filter: brightness(90%)
+}
+
 </style>
