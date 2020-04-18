@@ -2,17 +2,17 @@
     <v-app>
 <!--             Alert section -->
         <v-overlay :value="overlay">
-        <v-alert 
-            prominent 
-            type="error" 
-            color="pink" 
+        <v-alert
+            prominent
+            type="error"
+            color="pink"
             dark border="top"
             class="animated bounceIn">
             <v-row align="center">
             <v-col class="grow mb-0">No matching results for this particular country and sports category, try again with different values!</v-col>
             <v-col class="shrink">
-                <v-btn 
-                icon 
+                <v-btn
+                icon
                 @click="loadedOnce = false; overlay = false; secondModel = null; thirdModel = null; category = ''; team = ''; categories = []; teams = []; teamPlayers = null, selectedPlayer = null, teamEvents = null; animated = true; readMoreTeamDescActivated = false; image = require('@/assets/Soccer.jpeg'); placeholder = 'e.g. Lech Poznan'; icon = 'mdi-soccer'; selectedTeam = null">X</v-btn>
             </v-col>
             </v-row>
@@ -20,32 +20,32 @@
         </v-overlay>
         <v-card color="deep-purple lighten-1" dark class="d-flex flex-column">
                 <v-card-title class="headline deep-purple lighten-1">
-                    <span 
+                    <span
                     class="animated flipInX"
                     style="animation-delay: 500ms">
                     Search for your favourite team
                     </span>
                     <v-spacer></v-spacer>
-                    <span 
+                    <span
                     class="caption font-italic font-weight-light animated bounceInRight"
                     style="animation-delay: 750ms">
                     SPORTSNEWSAPP</span>
                     <v-icon right>mdi-newspaper-variant-multiple-outline</v-icon>
                 </v-card-title>
-                <v-img 
-                    :src="image" 
-                    :key="image" 
-                    height="600" 
+                <v-img
+                    :src="image"
+                    :key="image"
+                    height="600"
                     gradient="to bottom right, rgba(100,115,201,.75), rgba(25,32,72,.5)"
                     class="animated fadeIn">
-                <v-card-text 
+                <v-card-text
                 class="overline animated"
                 :class="{flipInX : loadedOnce}"
                 style="animation-delay: 500ms">
                 Explore hundreds of sports clubs worldwide!
                 </v-card-text>
                 <v-card-text class="mb-10">
-                    <v-card-text 
+                    <v-card-text
                     class="animated"
                     :class="{flipInX : loadedOnce}"
                     style="animation-delay: 500ms">
@@ -138,7 +138,8 @@
         </v-card>
 
            <div class="indigo darken-1 text-center">
-          <v-card :elevation="24" class=" indigo darken-4 white--text col-md-8 col-sm-10 offset-md-2 offset-sm-1 my-md-10 my-5">
+               <v-img src="./assets/background.png" gradient="to top left, rgba(100,115,201,.75), rgba(70,70,70,.85)">
+          <v-card :elevation="24" color="rgba(26, 35, 126, 0.5)"  class=" white--text col-md-8 col-sm-10 offset-md-2 offset-sm-1 my-md-10 my-5 ">
 
               <div class="Team_Info_container" v-if="firstLoadOfPage!=true && selectedTeam">
               <img :src="selectedTeam.strTeamBanner" class="v-picker--full-width mb-5" >
@@ -304,6 +305,7 @@
             </div>
             </v-card>
           </v-card>
+               </v-img>
       </div>
 
 
@@ -359,7 +361,7 @@
               show: false,
               count: [],
               countries: [],
-              categories: [], 
+              categories: [],
               teams: [],
               firstModel: null,
               secondModel: null,
@@ -379,10 +381,10 @@
               readMoreTeamDescActivated: false,
               image: require('@/assets/Soccer.jpeg'),
               icon: 'mdi-soccer',
-              icons: ['mdi-soccer', 
-              'mdi-car-sports', 
-              'mdi-boxing-glove', 
-              'mdi-baseball', 
+              icons: ['mdi-soccer',
+              'mdi-car-sports',
+              'mdi-boxing-glove',
+              'mdi-baseball',
               'mdi-basketball',
               'mdi-football',
               'mdi-hockey-puck',
@@ -514,7 +516,7 @@ created() {
       },
       thirdFields () {
         if (!this.thirdModel) return []
-      
+
         return Object.keys(this.thirdModel).map(key => {
           return {
             key,
@@ -541,7 +543,7 @@ created() {
           const strTeam = team.strTeam
           return Object.assign({}, team, { strTeam })
         })
-        
+
       }
   },
   watch: {
@@ -609,7 +611,7 @@ created() {
               }
               else {this.overlay = true
               this.thirdSearch = null
-              
+
               }
             })
             .catch(err => {
