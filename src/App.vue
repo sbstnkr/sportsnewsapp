@@ -182,12 +182,13 @@
 
                       <div class="col-12 col-md-6 text-center pl-0">
                           <div v-if="!selectedPlayer" class="title grey--text text--lighten-1 font-weight-light" style="align-self: center;">
-                              Select a User
+                              Select a Player
                           </div>
-                          <v-card v-else :key="selectedPlayer.id" flat>
+                          <v-card v-else flat>
                               <v-card-text>
                                   <v-avatar size="100">
-                                      <v-img :src="selectedPlayer.strCutout" class="mb-6"></v-img>
+                                      <v-img v-if="selectedPlayer.strCutout" :src="selectedPlayer.strCutout" class="mb-6"></v-img>
+                                      <v-img v-else src="./assets/userIcon.png" class="mb-6"></v-img>
                                   </v-avatar>
                                   <h3 class="headline mb-2">
                                       {{ selectedPlayer.strPlayer }}
@@ -195,19 +196,19 @@
                               </v-card-text>
                               <v-divider></v-divider>
                               <div class="my-5">
-                                  <v-row v-if="selectedPlayer.dateBorn.length > 0" class="pa-0">
+                                  <v-row v-if="selectedPlayer.dateBorn" class="pa-0">
                                       <div class="offset-1 offset-md-0 col-5  pa-0 text-right font-regular mr-4 mb-2" tag="strong" cols="6">Date Born:</div>
                                       <div class="col-5 pa-0 text-left font-weight-light">{{selectedPlayer.dateBorn}}</div>
                                   </v-row>
-                                  <v-row v-if="selectedPlayer.strNationality.length > 0" class="pa-0">
+                                  <v-row v-if="selectedPlayer.strNationality" class="pa-0">
                                       <div class="offset-1 offset-md-0 col-5  pa-0 text-right  font-regular mr-4 mb-2" tag="strong" cols="6">Nationality:</div>
                                       <div class="col-5 pa-0 text-left font-weight-light">{{ selectedPlayer.strNationality }}</div>
                                   </v-row>
-                                  <v-row v-if="selectedPlayer.strNumber.length > 0" class="pa-0">
+                                  <v-row v-if="selectedPlayer.strNumber" class="pa-0">
                                       <div class="offset-1  offset-md-0 col-5 pa-0 text-right font-regular mr-4 mb-2" tag="strong" cols="6">Number:</div>
                                       <div class="col-5  pa-0 text-left font-weight-light">{{ selectedPlayer.strNumber }}</div>
                                   </v-row>
-                                  <v-row v-if="selectedPlayer.strPosition.length > 0" class="pa-0">
+                                  <v-row v-if="selectedPlayer.strPosition" class="pa-0">
                                       <div class="offset-1 offset-md-0 col-5 pa-0 text-right font-regular mr-4 mb-2" tag="strong" cols="6">Position:</div>
                                       <div class="col-5 pa-0 text-left font-weight-light">{{ selectedPlayer.strPosition }}</div>
                                   </v-row>
@@ -223,9 +224,10 @@
                       <div class="col-12 col-md-5 pr-0">
                           <v-list class="overflow-y-auto" max-height="400" three-line>
                               <template v-for="player in teamPlayers" >
-                                  <v-list-item @click="setSelectedPlayer(player)" :key="player.strTeam">
+                                  <v-list-item @click="setSelectedPlayer(player)" :key="player.id">
                                       <v-list-item-avatar>
-                                          <v-img :src="player.strCutout"></v-img>
+                                          <v-img v-if="player.strCutout" :src="player.strCutout"></v-img>
+                                          <v-img v-else src="./assets/userIcon.png"></v-img>
                                       </v-list-item-avatar>
                                       <v-list-item-title v-html="player.strPlayer"></v-list-item-title>
                                   </v-list-item>
@@ -436,6 +438,7 @@
             this.selectedTeam = response[0].data.teams[0],
             console.log(this.selectedTeam),
             this.teamPlayers = response[1].data.player,
+                console.log(this.teamPlayers),
             axios.get(`${this.urlBase}${this.apiKey2}/eventsnext.php?id=${this.selectedTeam.idTeam}`)
                 .then(response => {
                     this.teamEvents = response.data.events;
