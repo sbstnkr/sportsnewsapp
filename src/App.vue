@@ -253,7 +253,7 @@
                                   </v-list-item-content>
                                   <v-list-item-action>
                                       <v-list-item-action-text v-text="teamEvent.dateEvent" ></v-list-item-action-text>
-                                      <v-list-item-action-text v-text="teamEvent.strTimeLocal.slice(0,-3)" ></v-list-item-action-text>
+                                      <v-list-item-action-text v-if="teamEvent.strTimeLocal!=null" v-text="teamEvent.strTimeLocal.slice(0,-3)" ></v-list-item-action-text>
                                   </v-list-item-action>
                               </v-list-item>
                               <v-divider :key="eventIndex"></v-divider>
