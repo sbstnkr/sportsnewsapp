@@ -253,7 +253,7 @@
                                   </v-list-item-content>
                                   <v-list-item-action>
                                       <v-list-item-action-text v-text="teamEvent.dateEvent" ></v-list-item-action-text>
-                                      <v-list-item-action-text v-text="teamEvent.strTimeLocal.slice(0,-3)" ></v-list-item-action-text>
+                                      <v-list-item-action-text v-if="teamEvent.strTimeLocal!=null" v-text="teamEvent.strTimeLocal.slice(0,-3)" ></v-list-item-action-text>
                                   </v-list-item-action>
                               </v-list-item>
                               <v-divider :key="eventIndex"></v-divider>
@@ -270,19 +270,23 @@
               :elevation="10"
             >
               <v-card-title class="indigo darken-2 white--text headline">Sport News</v-card-title>
+                <v-tooltip top color="indigo accent-3" :disabled=isNewsClicked>
+                  <template v-slot:activator="{ on }" >
               <v-carousel
                 class="animated fadeIn slower"
                 hide-delimiters
                 @change="newsToShow = news[$event]"
               >
+
                 <v-carousel-item
-                  class="carousel__item"
+                  class="carousel__item clickable tooltip "
                   @click="newsClicked(item)"
                   v-for="(item,index) in news"
                   :key="item.urlToImage"
                   :class="{ active: index == 0 }"
                   reverse-transition="fade"
                   transition="fade"
+                  v-on="on"
                 >
                   <v-card>
                     <v-img :src="item.urlToImage" height="400px"></v-img>
@@ -290,6 +294,9 @@
                   </v-card>
                 </v-carousel-item>
               </v-carousel>
+                </template>
+                  <span>Click to find out more</span>
+              </v-tooltip>
             </v-card>
 
 <!--            News section-->
@@ -425,7 +432,7 @@
               alert: true,
               animated: true,
               description: '',
-              loadedOnce: true
+              loadedOnce: true  
             }
         },
   methods: {
@@ -647,6 +654,9 @@ created() {
     .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
     {
         opacity: 0;
+    }
+    .clickable {
+      cursor: pointer;
     }
 
 </style>
