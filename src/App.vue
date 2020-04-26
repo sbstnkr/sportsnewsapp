@@ -145,7 +145,7 @@
               <img :src="selectedTeam.strTeamBanner" class="v-picker--full-width mb-5" >
 
 <!--             team description section-->
-              <div class="py-8 px-8">
+              <div class="py-8 px-8"  v-if="selectedTeam.strDescriptionEN!=null">
                   <p v-if="!readMoreTeamDescActivated && isTeamDescToggleButton()" > {{selectedTeam.strDescriptionEN.slice(0, 435)}}...</p>
                   <p v-else > {{selectedTeam.strDescriptionEN}}</p>
                   <v-btn small color="indigo lighten-4" v-if="!readMoreTeamDescActivated  && isTeamDescToggleButton()" @click="activateMoreText">Read More</v-btn>
@@ -160,7 +160,7 @@
                       </div>
                       <div class="col-sm-7">
                           <div v-for="(infoValue, infoKey) in teamInfo[0]" :key="infoKey" >
-                              <v-row v-if="selectedTeam[infoValue].length > 0 && selectedTeam[infoValue] !== '0'">
+                              <v-row v-if="selectedTeam[infoValue] != null && selectedTeam[infoValue].length > 0 && selectedTeam[infoValue] !== '0'">
                                   <div class="col-md-4 col-sm-5 col-6 text-right py-0">
                                       <p class="font-weight-black"> {{infoKey}} : </p>
                                   </div>
