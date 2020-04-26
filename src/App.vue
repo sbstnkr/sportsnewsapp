@@ -18,6 +18,7 @@
             </v-row>
         </v-alert>
         </v-overlay>
+<!--             Search section -->
         <v-card color="deep-purple lighten-1" dark class="d-flex flex-column">
                 <v-card-title class="headline deep-purple lighten-1">
                     <span
@@ -69,7 +70,7 @@
                     prepend-icon="mdi-flag-variant-outline"
                     return-object
                     @input="handleFirstInput"
-                    @change="loadedOnce = false; readMoreTeamDescActivated = false; thirdModel = null; team = ''; teams = []; selectedTeam = null; teamPlayers = null; selectedPlayer = null; teamEvents = null; animated = true">
+                    @change="loadedOnce = false; readMoreTeamDescActivated = false; secondModel = null; category = ''; categories = []; thirdModel = null; team = ''; teams = []; selectedTeam = null; teamPlayers = null; selectedPlayer = null; teamEvents = null; animated = true">
                 </v-autocomplete>
                     <v-autocomplete
             class="d-inline-flex elevation-23 mr-5 mb-5 pl-5 pr-2 animated"
@@ -142,7 +143,20 @@
           <v-card :elevation="24" color="rgba(26, 35, 126, 0.5)"  class=" white--text col-md-8 col-sm-10 offset-md-2 offset-sm-1 my-md-10 my-5 ">
 
               <div class="Team_Info_container" v-if="firstLoadOfPage!=true && selectedTeam">
-              <img :src="selectedTeam.strTeamBanner" class="v-picker--full-width mb-5" >
+<!--             tooltip section-->
+             <div 
+             class="d-flex justify-center animated pulse"
+             :class="{infinite: animated}"
+             >
+              <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+              <v-icon size=85 color="white" @mouseover="animated = false" v-on="on">{{ icon }}</v-icon>
+              </template>
+              <span>{{ description }}</span>
+              </v-tooltip>
+              </div>
+
+              <img :src="selectedTeam.strTeamBanner" id="banner" class="v-picker--full-width mb-5" >
 
 <!--             team description section-->
               <div class="py-8 px-8"  v-if="selectedTeam.strDescriptionEN!=null">
@@ -156,7 +170,7 @@
               <v-card color="indigo darken-2 white--text" :elevation="10" class="mx-sm-8">
                   <v-row>
                       <div class="mx-sm-4 col-4 offset-sm-0 offset-4">
-                          <v-img class="verticallyCenter" :src="selectedTeam.strTeamBadge"></v-img>
+                          <v-img id="logo" class="verticallyCenter" :src="selectedTeam.strTeamBadge"></v-img>
                       </div>
                       <div class="col-sm-7">
                           <div v-for="(infoValue, infoKey) in teamInfo[0]" :key="infoKey" >
@@ -358,8 +372,6 @@
 
 <script>
     import axios from "axios";
-
-
     export default {
         name: 'App',
         data() {
@@ -507,7 +519,6 @@ created() {
   computed: {
     firstFields () {
         if (!this.firstModel) return []
-
         return Object.keys(this.firstModel).map(key => {
           return {
             key,
@@ -517,7 +528,6 @@ created() {
       },
       secondFields () {
         if (!this.secondModel) return []
-
         return Object.keys(this.secondModel).map(key => {
           return {
             key,
@@ -527,7 +537,6 @@ created() {
       },
       thirdFields () {
         if (!this.thirdModel) return []
-
         return Object.keys(this.thirdModel).map(key => {
           return {
             key,
@@ -538,14 +547,12 @@ created() {
       firstItems () {
         return this.countries.map(region => {
           const country = region.country.replace('-', ' ').replace(' DR', '')
-
           return Object.assign({}, region, { country })
         })
       },
       secondItems () {
         return this.categories.map(category => {
           const strSport = category.strSport
-
           return Object.assign({}, category, { strSport })
         })
       },
@@ -554,13 +561,11 @@ created() {
           const strTeam = team.strTeam
           return Object.assign({}, team, { strTeam })
         })
-
       }
   },
   watch: {
       firstSearch () {
         if (this.firstItems.length > 0) return
-
         fetch("https://api-football-v1.p.rapidapi.com/v2/countries", {
               "method": "GET",
               "headers": {
@@ -585,7 +590,6 @@ created() {
       },
       secondSearch () {
         if (this.secondItems.length > 0) return
-
         fetch('https://www.thesportsdb.com/api/v1/json/1/all_sports.php')
           .then(res => res.json())
           .then(res => {
@@ -603,7 +607,6 @@ created() {
       },
       thirdSearch () {
         if (this.thirdItems.length > 0) return
-
         if (this.category != '' && this.region != '') {
           fetch(`https://www.thesportsdb.com/api/v1/json/1/search_all_teams.php?s=${this.category}&c=${this.region}`)
             .then(res => res.json())
@@ -622,7 +625,6 @@ created() {
               }
               else {this.overlay = true
               this.thirdSearch = null
-
               }
             })
             .catch(err => {
@@ -635,7 +637,6 @@ created() {
 </script>
 
 <style scoped>
-
     .shadow {
         -webkit-filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .7));
         filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .7));
@@ -665,4 +666,16 @@ created() {
         transform: translateY(-50%);
     }
 
+    .carousel__item {
+      filter: brightness(70%)
+    }
+
+    #logo {
+      -webkit-filter: drop-shadow( 3px 3px 7.5px rgba(0, 0, 0, .7));
+      filter: drop-shadow( 3px 3px 7.5px rgba(0, 0, 0, .7));
+    }
+
+    #banner {
+      filter: brightness(90%)
+}
 </style>
