@@ -156,7 +156,7 @@
               <v-card color="indigo darken-2 white--text" :elevation="10" class="mx-sm-8">
                   <v-row>
                       <div class="mx-sm-4 col-4 offset-sm-0 offset-4">
-                          <v-img :src="selectedTeam.strTeamBadge"></v-img>
+                          <v-img class="verticallyCenter" :src="selectedTeam.strTeamBadge"></v-img>
                       </div>
                       <div class="col-sm-7">
                           <div v-for="(infoValue, infoKey) in teamInfo[0]" :key="infoKey" >
@@ -657,6 +657,11 @@ created() {
     }
     .clickable {
       cursor: pointer;
+    }
+    .verticallyCenter {
+        margin: 0;
+        top: 50%;
+        transform: translateY(-50%);
     }
 
 </style>
