@@ -289,7 +289,8 @@
                   v-on="on"
                 >
                   <v-card>
-                    <v-img :src="item.urlToImage" height="400px"></v-img>
+                    <v-img v-if="item.urlToImage!=null"  :src="item.urlToImage" height="400px"></v-img>
+                    <v-img v-else :src="require('@/assets/noNews.jpg')" height="400px"></v-img>
                     <v-card-title class="mx-0 my-0">{{ item.title.slice(0,lengthOfNewsTitle) }}...</v-card-title>
                   </v-card>
                 </v-carousel-item>
