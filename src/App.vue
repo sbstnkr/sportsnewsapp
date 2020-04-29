@@ -174,7 +174,7 @@
                       </div>
                       <div class="col-sm-7">
                           <div v-for="(infoValue, infoKey) in teamInfo[0]" :key="infoKey" >
-                              <v-row v-if="selectedTeam[infoValue] != null && selectedTeam[infoValue].length > 0 && selectedTeam[infoValue] !== '0'">
+                              <v-row v-if="selectedTeam[infoValue] != null && selectedTeam[infoValue].length > 0 && selectedTeam[infoValue] !== '0' && !selectedTeam[infoValue].startsWith('_')">
                                   <div class="col-md-4 col-sm-5 col-6 text-right py-0">
                                       <p class="font-weight-black"> {{infoKey}} : </p>
                                   </div>
