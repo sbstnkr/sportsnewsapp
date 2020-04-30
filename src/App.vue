@@ -145,10 +145,10 @@
               <div class="Team_Info_container" v-if="firstLoadOfPage!=true && selectedTeam">
 <!--             tooltip section-->
              <div 
-             class="d-flex justify-center animated pulse"
+             class="d-flex justify-center animated pulse mb-5"
              :class="{infinite: animated}"
              >
-              <v-tooltip bottom>
+              <v-tooltip top max-width='66.67%'>
               <template v-slot:activator="{ on }">
               <v-icon size=85 color="white" @mouseover="animated = false" v-on="on">{{ icon }}</v-icon>
               </template>
@@ -156,10 +156,10 @@
               </v-tooltip>
               </div>
 
-              <img :src="selectedTeam.strTeamBanner" id="banner" class="v-picker--full-width mb-5" >
+              <img v-if="selectedTeam.strTeamBanner" :src="selectedTeam.strTeamBanner" id="banner" class="v-picker--full-width mb-5 animated fadeIn">
 
 <!--             team description section-->
-              <div class="py-8 px-8"  v-if="selectedTeam.strDescriptionEN!=null">
+              <div class="py-8 px-8"  v-if="selectedTeam.strDescriptionEN!=null" data-aos="fade-up">
                   <p v-if="!readMoreTeamDescActivated && isTeamDescToggleButton()" > {{selectedTeam.strDescriptionEN.slice(0, 435)}}...</p>
                   <p v-else > {{selectedTeam.strDescriptionEN}}</p>
                   <v-btn small color="indigo lighten-4" v-if="!readMoreTeamDescActivated  && isTeamDescToggleButton()" @click="activateMoreText">Read More</v-btn>
@@ -167,7 +167,7 @@
               </div>
 
 <!--              team info section-->
-              <v-card color="indigo darken-2 white--text" :elevation="10" class="mx-sm-8">
+              <v-card color="indigo darken-2 white--text" :elevation="10" class="mx-sm-8" data-aos="fade-up">
                   <v-row>
                       <div class="mx-sm-4 col-4 offset-sm-0 offset-4">
                           <v-img id="logo" class="verticallyCenter" :src="selectedTeam.strTeamBadge"></v-img>
@@ -188,7 +188,7 @@
               </v-card>
 
               <!--              team players section-->
-              <v-card v-if="teamPlayers" class="text-left mx-sm-8 pa-0 my-10" :elevation="10">
+              <v-card v-if="teamPlayers" class="text-left mx-sm-8 pa-0 my-10" :elevation="10" data-aos="fade-up">
                   <v-card-title class="indigo darken-2 white--text headline">
                       Players
                   </v-card-title>
@@ -198,7 +198,7 @@
                           <div v-if="!selectedPlayer" class="title grey--text text--lighten-1 font-weight-light" style="align-self: center;">
                               Select a Player
                           </div>
-                          <v-card v-else flat>
+                          <v-card v-else flat class="animated flipInX">
                               <v-card-text>
                                   <v-avatar size="100">
                                       <v-img v-if="selectedPlayer.strCutout" :src="selectedPlayer.strCutout" class="mb-6"></v-img>
@@ -253,7 +253,7 @@
               </v-card>
 
               <!--              team events section-->
-              <v-card v-if="teamEvents" class="col-sm-8 offset-sm-2 pa-0 " :elevation="10">
+              <v-card v-if="teamEvents" class="col-sm-8 offset-sm-2 pa-0 " :elevation="10" data-aos="fade-up">
                   <v-toolbar class="indigo darken-2" dark>
                       <v-toolbar-title>Coming Events</v-toolbar-title>
                   </v-toolbar>
@@ -282,6 +282,7 @@
               color="rgba(26, 35, 126, 0.5)"
               class="white--text text-left mx-sm-8 my-10"
               :elevation="10"
+              data-aos="fade-up"
             >
               <v-card-title class="indigo darken-2 white--text headline">Sport News</v-card-title>
                 <v-tooltip top color="indigo accent-3" :disabled=isNewsClicked>
@@ -578,8 +579,9 @@ created() {
             const { results, countries } = res.api
             this.count = results
             this.countries = countries
+            console.log(this.countries)
             let keys = Object.keys(this.countries)
-            let indexes = [6, 9, 12, 16, 17, 18, 21, 24, 42, 44, 50, 52, 64, 76, 83, 92, 99, 126]
+            let indexes = [6, 9, 12, 16, 17, 18, 21, 24, 25, 31, 44, 53, 55, 78, 82, 84, 92, 109, 122, 127, 129, 132, 141]
             for (var index of indexes) {
             delete this.countries[keys[index]]}
             this.countries = this.countries.filter(function() { return true; })
@@ -590,7 +592,7 @@ created() {
       },
       secondSearch () {
         if (this.secondItems.length > 0) return
-        fetch('https://www.thesportsdb.com/api/v1/json/1/all_sports.php')
+        fetch(`${this.urlBase}${this.apiKey2}/all_sports.php`)
           .then(res => res.json())
           .then(res => {
             const { sports } = res
@@ -608,7 +610,7 @@ created() {
       thirdSearch () {
         if (this.thirdItems.length > 0) return
         if (this.category != '' && this.region != '') {
-          fetch(`https://www.thesportsdb.com/api/v1/json/1/search_all_teams.php?s=${this.category}&c=${this.region}`)
+          fetch(`${this.urlBase}${this.apiKey2}/search_all_teams.php?s=${this.category}&c=${this.region}`)
             .then(res => res.json())
             .then(res => {
               if (res.teams != null) {
@@ -665,16 +667,13 @@ created() {
         top: 50%;
         transform: translateY(-50%);
     }
-
     .carousel__item {
       filter: brightness(70%)
     }
-
     #logo {
       -webkit-filter: drop-shadow( 3px 3px 7.5px rgba(0, 0, 0, .7));
       filter: drop-shadow( 3px 3px 7.5px rgba(0, 0, 0, .7));
     }
-
     #banner {
       filter: brightness(90%)
 }
