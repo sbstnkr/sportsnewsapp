@@ -172,8 +172,8 @@
                       <div class="mx-sm-4 col-4 offset-sm-0 offset-4">
                           <v-img id="logo" class="verticallyCenter" :src="selectedTeam.strTeamBadge"></v-img>
                       </div>
-                      <div class="col-sm-7">
-                          <div v-for="(infoValue, infoKey) in teamInfo[0]" :key="infoKey" >
+                      <div class="col-sm-7" style="margin-top: auto; margin-bottom: auto">
+                          <div v-for="(infoValue, infoKey) in teamInfo[0]" :key="infoKey">
                               <v-row v-if="selectedTeam[infoValue] != null && selectedTeam[infoValue].length > 0 && selectedTeam[infoValue] !== '0' && !selectedTeam[infoValue].startsWith('_')">
                                   <div class="col-md-4 col-sm-5 col-6 text-right py-0">
                                       <p class="font-weight-black"> {{infoKey}} : </p>
@@ -194,15 +194,15 @@
                   </v-card-title>
                   <v-row class="pa-4" justify="space-between">
 
-                      <div class="col-12 col-md-6 text-center pl-0">
-                          <div v-if="!selectedPlayer" class="title grey--text text--lighten-1 font-weight-light" style="align-self: center;">
+                      <div class="col-12 col-md-6 text-center pl-0" style="margin-top: auto; margin-bottom: auto">
+                          <div v-if="!selectedPlayer" class="title grey--text text--lighten-1 font-weight-light" style="align-self: center">
                               Select a Player
                           </div>
                           <v-card v-else flat class="animated flipInX">
                               <v-card-text>
                                   <v-avatar size="100">
                                       <v-img v-if="selectedPlayer.strCutout" :src="selectedPlayer.strCutout" class="mb-6"></v-img>
-                                      <v-img v-else src="./assets/userIcon.png" class="mb-6"></v-img>
+                                      <v-icon size="100" color="black" v-else>mdi-account</v-icon>
                                   </v-avatar>
                                   <h3 class="headline mb-2">
                                       {{ selectedPlayer.strPlayer }}
@@ -237,15 +237,15 @@
                       </div>
                       <div class="col-12 col-md-5 pr-0">
                           <v-list class="overflow-y-auto" max-height="400" three-line>
-                              <template v-for="player in teamPlayers" >
+                              <template v-for="player in teamPlayers">
                                   <v-list-item @click="setSelectedPlayer(player)" :key="player.id">
-                                      <v-list-item-avatar>
+                                      <v-list-item-avatar style="margin-top: auto; margin-bottom: auto">
                                           <v-img v-if="player.strCutout" :src="player.strCutout"></v-img>
-                                          <v-img v-else src="./assets/userIcon.png"></v-img>
+                                          <v-icon color="black" v-else large>mdi-account</v-icon>
                                       </v-list-item-avatar>
                                       <v-list-item-title v-html="player.strPlayer"></v-list-item-title>
                                   </v-list-item>
-                                  <v-divider :key="player.id"></v-divider>
+                                  <v-divider v-if="teamPlayers.length> 1" :key="player.id"></v-divider>
                               </template>
                           </v-list>
                       </div>
@@ -677,4 +677,5 @@ created() {
     #banner {
       filter: brightness(90%)
 }
+
 </style>
