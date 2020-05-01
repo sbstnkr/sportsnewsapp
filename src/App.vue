@@ -1,3 +1,4 @@
+
 <template>
     <v-app>
 <!--             Alert section -->
@@ -339,48 +340,20 @@
                </v-img>
       </div>
 
-
-        <v-footer
-                dark
-                padless
-        >
-            <v-card
-                    flat
-                    tile
-                    class="indigo lighten-1 white--text text-center"
-                    width="100%"
-            >
-                <v-card-text>
-                    powered by
-                </v-card-text>
-
-                <v-row class="pt-0 d-flex justify-center">
-                    <v-img class="mr-5 shadow" max-width="7%" max-height="100%"
-                           src="https://images-apilist-fun.sfo2.cdn.digitaloceanspaces.com/the_sports_db_api.png">
-                    </v-img>
-                    <v-img class="mx-5 shadow2" max-width="10%" height="100%" src="./assets/newsapi.png">
-                    </v-img>
-                    <v-img class="ml-5 shadow" max-width="7%" max-height="100%"
-                           src="https://www.api-football.com/public/img/home1/hero-banner1.png">
-                    </v-img>
-
-                </v-row>
-
-                <v-divider class="mx-10 mt-5"></v-divider>
-
-                <v-card-text class="white--text">
-                    <strong>{{ new Date().getFullYear() }} ©</strong>
-                </v-card-text>
-            </v-card>
-        </v-footer>
+<!--             footer -->
+  <CreditFooter/>
     </v-app>
 </template>
 
 
 <script>
     import axios from "axios";
+    import CreditFooter from './components/CreditFooter.vue'
     export default {
         name: 'App',
+        components: {
+          CreditFooter
+        },
         data() {
             return {
               apiKey1: '15de284d0e884be19dcf6c92c4a88205',
@@ -570,7 +543,6 @@ created() {
           return Object.assign({}, team, { strTeam })
         })
       },
-
   },
   watch: {
       firstSearch () {
@@ -685,5 +657,4 @@ created() {
     #banner {
       filter: brightness(90%)
 }
-
 </style>
