@@ -253,7 +253,7 @@
               </v-card>
 
               <!--              team events section-->
-              <v-card v-if="teamEvents" class="col-sm-8 offset-sm-2 pa-0 " :elevation="10" data-aos="fade-up">
+              <v-card v-if="teamEvents" class="col-sm-8 offset-sm-2 pa-0 my-10" :elevation="10" data-aos="fade-up">
                   <v-toolbar class="indigo darken-2" dark>
                       <v-toolbar-title>Coming Events</v-toolbar-title>
                   </v-toolbar>
@@ -320,13 +320,13 @@
 
 <!--            News section-->
           <v-card color="indigo darken-2 white--text" :elevation="10" class="mx-sm-8">
-            <div id="newsContainer" v-if="isShowNews === true">
+            <div id="newsContainer" class="pa-5" v-if="isShowNews === true && newsToShow.publishedAt!=null">
                 <p>{{ newsToShow.publishedAt.replace("T", " ").replace("Z", "") }}</p>
                 <h3 class="text-center">{{ newsToShow.title }}</h3>
-                    <p class="my-5">
+                    <p class="my-5" v-if="newsToShow.description!=null">
                         <b>{{ newsToShow.description }}</b>
                     </p>
-                    <p class="mb-5">
+                    <p class="mb-5" v-if="newsToShow.content!=null">
                         {{ newsToShow.content | regExp() }}
                     <a :href="newsToShow.url" target="_blank" >Click here to read full article</a>
                     </p>
