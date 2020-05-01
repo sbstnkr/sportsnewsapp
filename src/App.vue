@@ -253,7 +253,7 @@
               </v-card>
 
               <!--              team events section-->
-              <v-card v-if="teamEvents" class="col-sm-8 offset-sm-2 pa-0 " :elevation="10" data-aos="fade-up">
+              <v-card v-if="teamEvents" class="col-sm-8 offset-sm-2 pa-0 my-10" :elevation="10" data-aos="fade-up">
                   <v-toolbar class="indigo darken-2" dark>
                       <v-toolbar-title>Coming Events</v-toolbar-title>
                   </v-toolbar>
@@ -290,12 +290,10 @@
               <v-carousel
                 class="animated fadeIn slower"
                 hide-delimiters
-
                 @change="newsToShow = news[$event]"
               >
 
                 <v-carousel-item
-                
                   class="carousel__item clickable tooltip "
                   @click="newsClicked(item)"
                   v-for="(item,index) in news"
@@ -304,7 +302,6 @@
                   reverse-transition="fade"
                   transition="fade"
                   v-on="on"
-
                 >
                   <v-card>
                     <v-img v-if="item.urlToImage!=null"  :src="item.urlToImage" height="400px"></v-img>
