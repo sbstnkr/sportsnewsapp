@@ -152,9 +152,12 @@
               <template v-slot:activator="{ on }">
               <v-icon size=85 color="white" @mouseover="animated = false" v-on="on">{{ icon }}</v-icon>
               </template>
-              <span>{{ description }}</span>
+              <span v-if="width < 450" >{{description.slice(0, description.indexOf('.', 450) + 1)}}</span>
+              <span v-else-if="description.length < 1000" >{{ description }}</span>
+              <span v-else >{{description.slice(0, description.indexOf('.', 1000) + 1)}}</span>
               </v-tooltip>
               </div>
+
 
               <img v-if="selectedTeam.strTeamBanner" :src="selectedTeam.strTeamBanner" id="banner" class="v-picker--full-width mb-5 animated fadeIn">
 
@@ -263,8 +266,8 @@
                                       <v-list-item v-on="on" :key="eventIndex" class="tooltip">
                                           <v-list-item-content class="text-left">
                                               <v-list-item-title class="font-weight-black" v-text="teamEvent.strEvent"> </v-list-item-title>
-                                              <v-list-item-subtitle class="text--primary" ><b>Home: </b> {{teamEvent.strHomeTeam}}</v-list-item-subtitle>
-                                              <v-list-item-subtitle class="text--primary" ><b>Away: </b> {{teamEvent.strAwayTeam}}</v-list-item-subtitle>
+                                              <v-list-item-subtitle v-if="teamEvent.strHomeTeam" class="text--primary" ><b>Home: </b> {{teamEvent.strHomeTeam}}</v-list-item-subtitle>
+                                              <v-list-item-subtitle v-if="teamEvent.strAwayTeam" class="text--primary" ><b>Away: </b> {{teamEvent.strAwayTeam}}</v-list-item-subtitle>
                                               <v-list-item-subtitle class="text--primary" ><b>League: </b> {{teamEvent.strLeague}}</v-list-item-subtitle>
                                           </v-list-item-content>
                                           <v-list-item-action>
@@ -450,6 +453,7 @@
               animated: true,
               description: '',
               loadedOnce: true,
+              width: screen.width,
             }
         },
   methods: {
