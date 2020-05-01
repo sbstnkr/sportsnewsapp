@@ -263,7 +263,7 @@
                               <v-list-item :key="eventIndex">
                                   <v-list-item-content class="text-left">
                                       <v-list-item-title class="font-weight-black" v-text="teamEvent.strEvent"> </v-list-item-title>
-                                      <v-list-item-subtitle class="text--primary" v-text="teamEvent.strLeague"></v-list-item-subtitle>
+                                      <v-list-item-subtitle class="text--primary" ><b>League: </b> {{teamEvent.strLeague}}</v-list-item-subtitle>
                                   </v-list-item-content>
                                   <v-list-item-action>
                                       <v-list-item-action-text v-text="teamEvent.dateEvent" ></v-list-item-action-text>
