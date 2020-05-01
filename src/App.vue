@@ -317,7 +317,7 @@
 
 <!--            News section-->
           <v-card color="indigo darken-2 white--text" :elevation="10" class="mx-sm-8">
-            <div id="newsContainer" v-if="isShowNews === true">
+            <div id="newsContainer" class="pa-5" v-if="isShowNews === true">
                 <p>{{ newsToShow.publishedAt.replace("T", " ").replace("Z", "") }}</p>
                 <h3 class="text-center">{{ newsToShow.title }}</h3>
                     <p class="my-5">
