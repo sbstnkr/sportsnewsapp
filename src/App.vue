@@ -290,10 +290,12 @@
               <v-carousel
                 class="animated fadeIn slower"
                 hide-delimiters
+
                 @change="newsToShow = news[$event]"
               >
 
                 <v-carousel-item
+                
                   class="carousel__item clickable tooltip "
                   @click="newsClicked(item)"
                   v-for="(item,index) in news"
@@ -302,6 +304,7 @@
                   reverse-transition="fade"
                   transition="fade"
                   v-on="on"
+
                 >
                   <v-card>
                     <v-img v-if="item.urlToImage!=null"  :src="item.urlToImage" height="400px"></v-img>
@@ -317,13 +320,13 @@
 
 <!--            News section-->
           <v-card color="indigo darken-2 white--text" :elevation="10" class="mx-sm-8">
-            <div id="newsContainer" class="pa-5" v-if="isShowNews === true">
+            <div id="newsContainer" class="pa-5" v-if="isShowNews === true && newsToShow.publishedAt!=null">
                 <p>{{ newsToShow.publishedAt.replace("T", " ").replace("Z", "") }}</p>
                 <h3 class="text-center">{{ newsToShow.title }}</h3>
-                    <p class="my-5">
+                    <p class="my-5" v-if="newsToShow.description!=null">
                         <b>{{ newsToShow.description }}</b>
                     </p>
-                    <p class="mb-5">
+                    <p class="mb-5" v-if="newsToShow.content!=null">
                         {{ newsToShow.content | regExp() }}
                     <a :href="newsToShow.url" target="_blank" >Click here to read full article</a>
                     </p>
