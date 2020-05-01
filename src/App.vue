@@ -619,16 +619,6 @@ created() {
 </script>
 
 <style scoped>
-    .shadow {
-        -webkit-filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .7));
-        filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .7));
-        /* Similar syntax to box-shadow */
-    }
-    .shadow2 {
-        -webkit-filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .3));
-        filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .3));
-        /* Similar syntax to box-shadow */
-    }
     .social-icons {
         margin: 15px;
     }
