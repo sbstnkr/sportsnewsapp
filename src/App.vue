@@ -14,7 +14,10 @@
           <v-col class="shrink">
             <v-btn
             icon
-            @click="loadedOnce = false; overlay = false; secondModel = null; thirdModel = null; category = ''; team = ''; categories = []; teams = []; teamPlayers = null, selectedPlayer = null, teamEvents = null; animated = true; readMoreTeamDescActivated = false; image = require('@/assets/Soccer.jpeg'); placeholder = 'e.g. Lech Poznan'; icon = 'mdi-soccer'; selectedTeam = null">X</v-btn>
+            @click="loadedOnce = false; overlay = false; secondModel = null; thirdModel = null; category = ''; team = ''; 
+                    categories = []; teams = []; teamPlayers = null, selectedPlayer = null, teamEvents = null; animated = true; 
+                    readMoreTeamDescActivated = false; image = require('@/assets/Soccer.jpeg'); placeholder = 'e.g. Lech Poznan'; 
+                    icon = 'mdi-soccer'; selectedTeam = null">X</v-btn>
           </v-col>
         </v-row>
       </v-alert>
@@ -72,7 +75,9 @@
           prepend-icon="mdi-flag-variant-outline"
           return-object
           @input="handleFirstInput"
-          @change="loadedOnce = false; readMoreTeamDescActivated = false; secondModel = null; category = ''; categories = []; thirdModel = null; team = ''; teams = []; selectedTeam = null; teamPlayers = null; selectedPlayer = null; teamEvents = null; animated = true">
+          @change="loadedOnce = false; readMoreTeamDescActivated = false; secondModel = null; category = ''; categories = []; 
+                    thirdModel = null; team = ''; teams = []; selectedTeam = null; teamPlayers = null; selectedPlayer = null; 
+                    teamEvents = null; animated = true">
           </v-autocomplete>
           <v-autocomplete
           class="d-inline-flex elevation-23 mr-5 mb-5 pl-5 pr-2 animated"
@@ -92,7 +97,8 @@
           :prepend-icon="icon"
           return-object
           @input="handleSecondInput"
-          @change="loadedOnce = false; readMoreTeamDescActivated = false; thirdModel = null; team = ''; teams = []; selectedTeam = null; teamPlayers = null; selectedPlayer = null; teamEvents = null; animated = true">
+          @change="loadedOnce = false; readMoreTeamDescActivated = false; thirdModel = null; team = ''; teams = []; selectedTeam = null; 
+                    teamPlayers = null; selectedPlayer = null; teamEvents = null; animated = true">
           </v-autocomplete>
           <v-autocomplete
           class="d-inline-flex elevation-24 pl-5 pr-2 animated"
@@ -113,7 +119,8 @@
           return-object
           :disabled="!(firstModel && secondModel)"
           @input="handleThirdInput"
-          @change="loadedOnce = false; readMoreTeamDescActivated = false; selectedTeam = null; teamPlayers = null; selectedPlayer = null; teamEvents = null; animated = true">
+          @change="loadedOnce = false; readMoreTeamDescActivated = false; selectedTeam = null; teamPlayers = null; selectedPlayer = null; 
+                    teamEvents = null; animated = true">
           </v-autocomplete>
         </v-card-text>
         <v-card-actions class="ma-5">
@@ -131,7 +138,10 @@
           <v-btn
           :disabled="!(firstModel || secondModel || thirdModel)"
           color="grey darken-1"
-          @click="loadedOnce = false; readMoreTeamDescActivated = false; firstModel = ''; secondModel = null; thirdModel = null; category = ''; team = ''; region = ''; categories = []; teams = []; countries = []; selectedTeam = null; teamPlayers = null; selectedPlayer = null; teamEvents = null; animated = true; image = require('@/assets/Soccer.jpeg'); placeholder = 'e.g. Lech Poznan'; icon = 'mdi-soccer';"
+          @click="loadedOnce = false; readMoreTeamDescActivated = false; firstModel = ''; secondModel = null; thirdModel = null; category = ''; 
+                    team = ''; region = ''; categories = []; teams = []; countries = []; selectedTeam = null; teamPlayers = null; 
+                    selectedPlayer = null; teamEvents = null; animated = true; image = require('@/assets/Soccer.jpeg'); 
+                    placeholder = 'e.g. Lech Poznan'; icon = 'mdi-soccer';"
           style="position: absolute; right: 25px; bottom: 20px;">
             Clear
             <v-icon right>mdi-close-circle</v-icon>
@@ -434,9 +444,7 @@
                   ])
             .then(response => (
               this.selectedTeam = response[0].data.teams[0],
-              console.log(this.selectedTeam),
               this.teamPlayers = response[1].data.player,
-              console.log(this.teamPlayers),
               axios.get(`${this.urlBase}${this.apiKey2}/eventsnext.php?id=${this.selectedTeam.idTeam}`)
                 .then(response => {
                     this.teamEvents = response.data.events;
@@ -459,7 +467,6 @@
       }}},
       handleThirdInput (value) {
         this.team = value.strTeam;
-        console.log(this.team)
       },
       activateMoreText() {
         this.readMoreTeamDescActivated = true;
@@ -475,10 +482,9 @@
         this.newsToShow = news;
         this.isNewsClicked = true;
       },
-      isTeamDescToggleButton()
-        {
+      isTeamDescToggleButton() {
           return this.selectedTeam.strDescriptionEN.length > 435 ? true : false;
-        }
+      }
     },
     filters: {
       regExp(string) {
@@ -556,7 +562,6 @@
             const { results, countries } = res.api
             this.count = results
             this.countries = countries
-            console.log(this.countries)
             let keys = Object.keys(this.countries)
             let indexes = [6, 9, 12, 16, 17, 18, 21, 24, 25, 31, 44, 53, 55, 78, 82, 84, 92, 109, 122, 127, 129, 132, 141]
             for (var index of indexes) {
